@@ -1,0 +1,4 @@
+services:
+    #my_flag:
+    #    class: IBK\DemoBundle\Services\Flag # Namespace completo a nuestra clase
+    #    arguments: ["%my_flag.flag%"] # dependencia1, dependencia2,... dependenciaN

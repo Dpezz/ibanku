@@ -1,0 +1,293 @@
+{% block datos_personales %}
+{# alerta resultado del formulario #}
+    {% if flag == 1 %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-check-circle"></i>&nbsp;<strong>Finalizado!</strong>&nbsp;cambios realizados con exito
+        </div>
+    {% elseif flag == 0 %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;ocurrio un error al guardar los cambios
+        </div>
+    {% endif %}
+
+
+<div class="panel">
+  	<div class="panel-body">
+
+	<form action="{{path('_edit_personal')}}" method="POST">
+		<div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="text-info">Rut</label>
+                    <input type="text" class="form-control input-sm" id="rut" name="_rut" value="{{dataP.id}}" placeholder="RUT" disabled autofocus>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="text-info">N° serie CNI</label>
+                    <input type="text" class="form-control input-sm" name="_numero_serie" value="{{dataP.numeroserie}}" placeholder="Número de Serie CNI" autofocus required>
+                </div>
+            </div>
+        </div>
+
+
+        <label class="text-info">Nombre</label>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" class="form-control input-sm" id="nombre" name="_nombre" value="{{dataP.nombre}}" placeholder="Nombre" disabled autofocus>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" class="form-control input-sm" id="apellido_p" name="_apellido_p" value="{{dataP.apellidop}}"placeholder="Apellido Paterno" disabled autofocus>
+                </div>
+            </div>
+            <div class="col-md-4">   
+                <div class="form-group">
+                    <input type="text" class="form-control input-sm" id="apellido_m" name="_apellido_m" value="{{dataP.apellidom}}" placeholder="Apellido Materno" disabled autofocus>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+		<div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                <label class="text-info">Fecha Nacimiento</label>
+                {% set item = dataP.fechanacimiento|date('d') ~'/'~dataP.fechanacimiento|date('m') ~'/'~dataP.fechanacimiento|date('Y')%}
+                    <input type="text" id="birthday-personal" name="_birthday" class="form-control input-sm" data-date-format="DD/MM/YYYY" value="{{item}}" placeholder="Fecha Nacimiento" required autofocus>
+                </div>
+            </div>
+            <div class="col-md-4">
+		        <div class="form-group">
+                    <label class="text-info">Nacionalidad</label>
+		            <input type="text" name="_nacionalidad" class="form-control input-sm" value="{{dataP.nacionalidad}}" placeholder="Nacionalidad" required autofocus>
+		        </div>
+            </div>
+
+        	<div class="col-md-4">
+        		 <div class="form-group">
+                    <label class="text-info">Sexo</label>
+                    <select class="form-control input-sm" name="_sexo" autofocus required>
+                        <option value=''>Sexo</option>
+                        {% set items = sexo|split(',') %}
+                        {% for item in items %}
+                            {% if item == dataP.sexo %}
+                                <option value="{{item}}" selected>{{item}}</option>
+                            {% else %}
+                                <option value="{{item}}">{{item}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+    	</div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="text-info">Estado Civil</label>
+                    <select class="form-control input-sm" id="civil" name="_civil" autofocus required>
+                        <option value=''>Estado Civil</option>
+                        {% set items = civil|split(',') %}
+                        {% for item in items %}
+                            {% if item == dataP.estadocivil %}
+                                <option value="{{item}}" selected>{{item}}</option>
+                            {% else %}
+                                <option value="{{item}}">{{item}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">   
+                <div class="form-group">
+                    <label class="text-info">N° Dependientes</label>
+                    <input type="number" class="form-control input-sm" name="_dependientes" value="{{dataP.dependientes}}" placeholder="Numero de Dependientes" autofocus required>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+        	<div class="col-md-6">
+		        <div class="form-group">
+                    <label class="text-info">Región</label>
+                    <select class="form-control input-sm" id="region" name="_region" autofocus required>
+                        <option value=''>- Seleccionar Región -</option>
+                        {% set items = region|split(',') %}
+                        {% for item in items %}
+                            {% if item == dataL.region %}
+                                <option value="{{item}}" selected>{{item}}</option>
+                            {% else %}
+                                <option value="{{item}}">{{item}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+		        </div>
+        	</div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="text-info">Comuna</label>
+                    <select class="form-control input-sm" id="comuna" name="_comuna" autofocus required>
+                  		<option>- Seleccionar Comuna -</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+        	<div class="col-md-6">
+		         <div class="form-group">
+                    <label class="text-info">Domicilio</label>
+		            <input type="text" class="form-control input-sm" name="_direccion" value="{{dataL.domicilio}}"placeholder="Dirección" autofocus required>
+		        </div>
+        	</div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="text-info">Calidad Domicilio</label>
+                    <select class="form-control input-sm" id="calidad-domicilio" name="_calidad" autofocus required>
+                        <option value=''>Calidad Domicilio</option>
+                        {% set items = domicilio|split(',') %}
+                        {% for item in items %}
+                            {% if item == dataL.calidaddomicilio %}
+                                <option value="{{item}}" selected>{{item}}</option>
+                            {% else %}
+                                <option value="{{item}}">{{item}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="text-info">Correo Electrónico</label>
+                    <input type="email" name="_email" class="form-control input-sm" value="{{dataL.email}}" placeholder="Correo electrónico" disabled autofocus>
+                </div>
+            </div>
+        	<div class="col-md-4">
+		         <div class="form-group">
+                    <label class="text-info">Celular</label>
+		            <input type="text" class="form-control input-sm" name="_celular" value="{{dataL.celular}}" placeholder="Celular" autofocus required>
+		        </div>
+        	</div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="text-info">Teléfono Fijo&nbsp;(Opcional)</label>
+		            <input type="text" class="form-control input-sm" name="_telefono" value="{{dataL.telefono}}" placeholder="Teléfono" autofocus>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        {% set items = dataL.redes|split(']') %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="text-info">Facebook&nbsp;(Opcional)</label>
+                    <input type="text" class="form-control input-sm" name="_facebook" value="{{items[0]|split('[')|last}}" placeholder="/">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="text-info">Twitter&nbsp;(Opcional)</label>
+                    <input type="text" class="form-control input-sm" name="_twitter" value="{{items[1]|split('[')|last}}"placeholder="@">
+                </div>
+            </div>
+        </div>
+
+		<div class="modal-footer">
+            <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o"></i>&nbsp;Guardar</button>
+			<a class="btn btn-default" href="{{path('_personal_conyugue')}}"><i class="fa fa-arrow-right"></i>&nbsp;Siguiente</a>
+		</div>
+	</form>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+    exist();
+
+    $('#birthday-personal').datetimepicker({ pickTime: false });
+        
+    //Cargar los Datos de Comuna
+    {% if dataL.region is not empty %}
+    $.ajax({
+            url: '{{url('_load_comuna')}}',
+            method: "post",
+            data:{'region': '{{dataL.region}}' },
+            success: function(item){
+                var comuna = item.split(',');
+                $("#comuna").html('');
+                $("<option value=''>- Seleccionar Comuna -</option>").appendTo("#comuna");
+                for (var i = 0; i < comuna.length; i++) {
+                    if(comuna[i] == '{{dataL.comuna}}'){
+                        $("<option value='"+comuna[i]+"' selected>"+comuna[i]+"</option>").appendTo("#comuna");
+                    }
+                    else{
+                        $("<option value='"+comuna[i]+"'>"+comuna[i]+"</option>").appendTo("#comuna");
+                    }
+                };
+            }
+    });
+
+    {% else %}
+        $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna");
+    {% endif %}
+
+
+    //Cargar Comunas
+    $('#region').change(function(){
+        if($('#region').val() != ''){
+            $.ajax({
+            url: '{{path('_load_comuna')}}',
+            data: {'region': $('#region').val() },
+            method: "post",
+            success: function(item){
+                //activar CB comunas
+                $('#comuna').removeAttr('disabled');
+                var comunas = item.split(',');
+                $("#comuna").html('');
+
+                $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna");
+                for (var i = 0; i < comunas.length; i++) {
+                    $("<option value='"+comunas[i]+"'>"+comunas[i]+"</option>").appendTo("#comuna");
+                };
+            }
+            });
+        }else{
+            //desactivar CB comunas
+            $('#comuna').attr('disabled','disabled');
+            $("#comuna").html('');
+            $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna");
+        }
+    })
+
+
+    function exist(){
+        if($('.alert') != null ){
+            setTimeout(function(){ $('.alert').hide(1000); }, 5000);
+        }
+    }
+
+})
+</script>
+{% endblock %}

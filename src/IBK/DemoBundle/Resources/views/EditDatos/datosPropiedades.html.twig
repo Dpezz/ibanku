@@ -1,0 +1,342 @@
+{% block datos_propiedades %}
+{# alerta resultado del formulario #}
+    {% if flag == 1 %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-check-circle"></i>&nbsp;<strong>Finalizado!</strong>&nbsp;cambios realizados con exito
+        </div>
+    {% elseif flag == 0 %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;ocurrio un error al guardar los cambios
+        </div>
+    {% endif %}
+
+    
+
+<div class="table-responsive">
+  <table class="table table-hover">
+   	<thead>
+        <tr>
+            <th>#</th>
+            <th>Tipo</th>
+          	<th>Región/Comuna</th>
+          	<th>Rol</th>
+            <th>Avaluo fiscal</th>
+            <th>Avaluo comercial</th>
+          	<th>Hipotecada</th>
+          	<th>Editar/Eliminar</th>
+        </tr>
+  	</thead>
+  	<tbody>
+      {% for item in datosP %}
+          <tr>
+          	<td><span class="badge ">{{loop.index}}</span></td>
+          	<td>{{item.tipo}}</td>
+            <td>{{item.region}}/{{item.comuna}}</td>
+            <td>{{item.rol}}</td>
+          	<td>{{item.avaluoFiscal}}</td>
+            <td>{{item.avaluoComercial}}</td>
+            <td>{% if item.hipotecada == 1 %}Si{% else %}No{% endif %}</td>
+            <td>
+            <a href="#" data-toggle="modal" data-target="#new_propiedad" onclick="edit_propiedad('{{item.id}}','{{item.tipo}}','{{item.descripcion}}','{{item.region}}','{{item.comuna}}','{{item.rol}}','{{item.avaluoFiscal}}','{{item.avaluoComercial}}','{{item.hipotecada}}','{{item.afavor}}')"><i class="fa fa-edit text-primary"></i></a>
+                &emsp;-&emsp;
+            <a href="#" data-toggle="modal" data-target="#delete_propiedad" onclick="delete_propiedad('{{item.id}}','{{item.tipo}}')"><i class="fa fa-trash text-danger"></i></a>
+            </td>
+          </tr>
+      {% endfor %}
+      </tbody>
+  </table>
+</div>
+
+<br>
+<br>
+<div class="modal-footer">
+	<button class="btn btn-primary pull-left" data-toggle="modal" data-target="#new_propiedad" onclick="reset()"><i class="fa fa-plus-circle"></i>&nbsp;Nueva</button>
+  <a class="btn btn-default" href="{{path('_activos_inversiones')}}"><i class="fa fa-arrow-right"></i>&nbsp;Siguiente</a>
+</div>
+
+<script type="text/javascript">
+  exist();
+
+  function edit_propiedad(id,tipo,descripcion,region,comuna,rol,fiscal,comercial,hipotecada,a_favor){
+    comunas(region,comuna);
+    $("input[name='_id']").val(id); 
+    $("input[name='_rol']").val(rol); 
+    $("input[name='_fiscal']").val(fiscal); 
+    $("input[name='_comercial']").val(comercial); 
+    $("input[name='_a_favor']").val(a_favor); 
+
+    $("#descripcion").html(descripcion);
+
+    $("#tipo option[value='"+tipo+"']").attr("selected", "selected");
+    $("#region option[value='"+region+"']").attr("selected", "selected");
+    $("#formPropiedad").attr("action","{{path('_edit_propiedad')}}");
+
+    hipotecada_activar(hipotecada,a_favor);
+    activar();
+  }
+
+  function delete_propiedad(id,name){
+    $('#nombre').html(name);
+    $('#id').val(id);
+  }
+
+  function reset(){
+    $("input[name='_id']").val(''); 
+    $("input[name='_rol']").val(''); 
+    $("input[name='_fiscal']").val(''); 
+    $("input[name='_comercial']").val(''); 
+    $("input[name='_a_favor']").val(''); 
+
+    $("#descripcion").html(''); 
+
+    $("#tipo option[value='']").attr("selected", "selected");
+    $("#region option[value='']").attr("selected", "selected");
+    $("#comuna option[value='']").attr("selected", "selected");
+    $("#hipotecada option[value='']").attr("selected", "selected");
+    $("#formPropiedad").attr("action","{{path('_new_propiedad')}}");
+    desactivar();
+  }
+
+  function comunas(region,comuna_select){
+    //Cargar los Datos de Comuna
+    $.ajax({
+      url: '{{url('_load_comuna')}}',
+      method: "post",
+      data:{'region': region },
+      success: function(item){
+          var comuna = item.split(',');
+          $("#comuna").html('');
+          $("<option value=''>- Comuna -</option>").appendTo("#comuna");
+          for (var i = 0; i < comuna.length; i++) {
+            $("<option value='"+comuna[i]+"'>"+comuna[i]+"</option>").appendTo("#comuna");
+          }
+          $("#comuna option[value='"+comuna_select+"']").attr("selected", "selected");
+      }
+    });
+  }
+
+  function activar(){
+    $('#comuna').removeAttr('disabled');
+  }
+
+  function desactivar(){
+    $("#comuna").html('');
+    $("<option value=''>- Comuna -</option>").appendTo("#comuna");
+    $('#comuna').attr('disabled','disabled');
+  }
+
+  function hipotecada_activar(number,a_favor){
+    if(number == 1){
+      $("#hipotecada option[value='1']").attr("selected", "selected");
+        $('#formFavor').show();
+        $('#afavor').attr('required','required');
+        $("input[name='_a_favor']").val(a_favor);
+      }else{
+        $("#hipotecada option[value='0']").attr("selected", "selected");
+        $('#formFavor').hide();
+        $('#afavor').removeAttr('required');
+        $("input[name='_a_favor']").val('');
+      }
+  }
+
+  function exist(){
+      if($('.alert') != null ){
+      setTimeout(function(){ $('.alert').hide(1000); }, 5000);
+      }
+  };
+</script>
+{% endblock %}
+
+
+
+
+{% block new_propiedades %}
+<!-- Modal -->
+<div class="modal fade" id="new_propiedad" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Nuevo Propiedad</h4>
+            </div>
+            <div class="modal-body">
+             
+              <form id="formPropiedad" action="{{path('_new_propiedad')}}" method="POST">
+                  <input type="hidden" name="_id">
+                  <div class="row">
+                      <div class="col-md-12">
+                           <div class="form-group">
+                              <label class="text-info">Tipo</label>
+                              <select class="form-control input-sm" id="tipo" name="_tipo" autofocus required>
+                                  <option value=''>- Tipo -</option>
+                                  {% set items = tipo|split(',') %}
+                                  {% for item in items %}
+                                    <option value="{{item}}">{{item}}</option>
+                                  {% endfor %}
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="text-info">Descripción</label>
+                    <textarea class="form-control" rows="2" id="descripcion" name="_descripcion" placeholder="Referencia, domicilio,etc" autofocus required></textarea>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-6">
+                           <div class="form-group">
+                              <label class="text-info">Región</label>
+                              <select class="form-control input-sm" id="region" name="_region" autofocus required>
+                                  <option value=''>- Región -</option>
+                                  {% set items = region|split(',') %}
+                                  {% for item in items %}
+                                    <option value="{{item}}">{{item}}</option>
+                                  {% endfor %}
+                              </select>
+                          </div>
+                      </div>
+
+                      <div class="col-md-6">
+                           <div class="form-group">
+                              <label class="text-info">Comuna</label>
+                              <select class="form-control input-sm" id="comuna" name="_comuna" disabled autofocus required>
+                                  <option value=''>- Comuna -</option>
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+
+                     
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div class="form-group">
+                              <label class="text-info">Rol</label> 
+                              <input type="text" class="form-control input-sm" name="_rol" placeholder="Rol" autofocus required>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="form-group">
+                              <label class="text-info">Avalúo Fiscal</label> 
+                              <input type="text" class="form-control input-sm" name="_fiscal" placeholder="Avalúo Fiscal" autofocus required>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-group">
+                              <label class="text-info">Avalúo Comercial</label> 
+                              <input type="text" class="form-control input-sm" name="_comercial" placeholder="Avalúo Comercial" autofocus required>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-6">
+                           <div class="form-group">
+                              <label class="text-info">Hipotecada</label>
+                              <select class="form-control input-sm" id="hipotecada" name="_hipotecada" autofocus required>
+                                  <option value=''>- Hipotecada -</option>
+                                  <option value="1">Si</option>
+                                  <option value="0">No</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div id="formFavor" class="form-group">
+                              <label class="text-info">Hipotecada a favor de Quien?</label>
+                              <input type="text" class="form-control input-sm" id="afavor" name="_a_favor" 
+                               autofocus>
+                          </div>
+                      </div>
+                  </div>
+
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+                </div>
+
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+  $('#hipotecada').change(function(){
+    if($('#hipotecada').val() == 1){
+      $('#formFavor').show();
+      $('#afavor').attr('required','required');
+    }else{
+      $('#formFavor').hide();
+      $('#afavor').removeAttr('required');
+    }
+  })
+
+  //Cargar Comunas
+  $('#region').change(function(){
+      if($('#region').val() != ''){
+          $.ajax({
+          url: '{{path('_load_comuna')}}',
+          data: {'region': $('#region').val() },
+          method: "post",
+          success: function(item){
+              //activar CB comunas
+              $('#comuna').removeAttr('disabled');
+              var comunas = item.split(',');
+              $("#comuna").html('');
+
+              $("<option value=''>- Comuna -</option>").appendTo("#comuna");
+              for (var i = 0; i < comunas.length; i++) {
+                  $("<option value='"+comunas[i]+"'>"+comunas[i]+"</option>").appendTo("#comuna");
+              };
+          }
+          });
+      }else{
+          //desactivar CB comunas
+          $('#comuna').attr('disabled','disabled');
+          $("#comuna").html('');
+          $("<option value=''>- Comuna -</option>").appendTo("#comuna");
+      }
+  })
+
+
+</script>
+{% endblock %}
+
+{% block delete_propiedad %}
+<!-- Modal -->
+<div class="modal fade" id="delete_propiedad" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Eliminar Propiedad</h4>
+            </div>
+            <div class="modal-body">
+             
+              <form action="{{path('_delete_propiedad')}}" method="POST">
+
+                <input type="hidden" id="id" name="_id">
+                <h5 class="text-muted text-center">¿Estás seguro que deseas eliminar la propiedad 
+                  <strong><span id="nombre"></span></strong>?
+                </h5>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-trash"></i>&nbsp;Eliminar</button>
+                </div>
+
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

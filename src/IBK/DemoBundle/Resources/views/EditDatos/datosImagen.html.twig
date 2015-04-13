@@ -1,0 +1,160 @@
+{% block datos_imagen %}
+{# alerta resultado del formulario #}
+    {% if flag == 1 %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-check-circle"></i>&nbsp;<strong>Finalizado!</strong>&nbsp;cambios realizados con exito
+        </div>
+    {% elseif flag == 0 %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;ocurrio un error al guardar los cambios
+        </div>
+    {% elseif flag == 2 %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;La extensión de la imagen no es válida
+        </div>
+    {% elseif flag == 3 %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;El tamaño de la imagen excede el limite
+        </div>
+    {% endif %}
+
+
+
+
+    <div class="page-header">
+        <h5 class="text-muted">Imagen de Perfil</h5>
+    </div>
+
+    <h6 class="text-center">
+        <img src="{{asset('img/'~ app.user.url )}}" class="img-rounded" width="150px">
+    </h6>
+
+    <div class="modal-footer">
+        <button class="avatar-view btn btn-primary" data-toggle="modal" data-target="#avatar-modal"> <i class="fa fa-image fa-lg"></i>&nbsp;Editar</button>
+    </div>
+
+
+    <!-- Cropping modal -->
+    <div class="modal fade" id="avatar-modal" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
+      <div class="modal-dialog">
+
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button class="close" data-dismiss="modal" type="button">&times;</button>
+            <h4 class="modal-title" id="avatar-modal-label">Editar Imagen</h4>
+          </div>
+
+          <div class="modal-body">
+       
+            <form class="avatar-form" action="{{path('_edit_imagen')}}" enctype="multipart/form-data" method="POST">
+              
+              <div class="well">
+                  <h1 class="text-center">
+                   <img class="img-rounded" id="imagenPreview" name="_imagenPreview" src="{{asset('bundles/ibkdemo/img/imagen.png')}}" width="100%">
+                  </h1>
+
+                  <input type="hidden" id="x" name="_x1" value="0" />
+                  <input type="hidden" id="y" name="_y1" value="0"/>
+                  <input type="hidden" id="w" name="_w" value="0"/>
+                  <input type="hidden" id="h" name="_h" value="0"/>
+                  <input type="hidden" id="wWeb" name="_wWeb" value="1"/>
+                  <input type="hidden" id="hWeb" name="_hWeb" value="1"/>
+                  
+
+              </div>
+
+              <input type="file" id="imagenFile" name="_file" accept="image/png,image/jpeg"/>
+   
+              <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+                <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div><!-- /.modal -->
+
+
+
+<link rel="stylesheet" type="text/css" href="{{asset('bundles/ibkdemo/jcrop/css/jquery.Jcrop.min.css')}}"/>
+<script src="{{asset('bundles/ibkdemo/jcrop/js/jquery.Jcrop.min.js')}}"></script>
+<script type="text/javascript">
+    exist();
+    
+    var imagenPreview = document.getElementById("imagenPreview");
+    var imagenFile = document.getElementById("imagenFile");
+    var saveEditImagen = document.getElementById("saveEditImagen");
+
+    var isChange=false;
+    var jcrop_api;
+
+    imagenFile.onclick = function(e){
+        if(isChange){
+            jcrop_api.destroy();
+        }
+    }
+
+    //si cambia el file
+    imagenFile.onchange = function(e){
+        var selectedFile = imagenFile.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function(event) {
+            imagenPreview.src = event.target.result;
+            //$('#dataImagen').val(event.target.result);
+            $('#wWeb').val(imagenPreview.width);
+            $('#hWeb').val(imagenPreview.height);
+            loadSelectImage();
+        };
+        reader.readAsDataURL(selectedFile);
+    }
+
+
+    //empezar a dimensionar 
+    function loadSelectImage(){
+        $('#imagenPreview').Jcrop({
+            onSelect:    function(c){
+                $('#x').val(c.x)
+                $('#y').val(c.y)
+                $('#w').val(c.w)
+                $('#h').val(c.h)
+                isChange = true;
+
+            },
+            bgFade: true,
+            bgColor:     'black',
+            setSelect: [20,20,70,70],
+            aspectRatio: 4 / 4
+        },function(){
+            jcrop_api = this;
+        });
+    }
+    
+    $('#cancelEditImage,#addImagen').click(function(){
+        location.href='{{path('_profile_imagen')}}';
+    });
+
+    function exist(){
+        if($('.alert') != null ){
+            setTimeout(function(){ $('.alert').hide(1000); }, 5000);
+        }
+    };
+</script>
+{% endblock %}
+

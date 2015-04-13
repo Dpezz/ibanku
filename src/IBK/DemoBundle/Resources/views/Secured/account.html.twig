@@ -1,0 +1,181 @@
+{% extends 'IBKDemoBundle:Layout:page_datos.html.twig' %}
+
+{% block title %}Cuenta{% endblock %}
+
+{% block subtitle %}Configuración Cuenta{% endblock %}
+
+
+{% block datos %}
+{# alerta resultado del formulario #}
+    {% if flag == 1 %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-check-circle"></i>&nbsp;<strong>Finalizado!</strong>&nbsp;cambios realizados con exito
+        </div>
+    {% elseif flag == 0 %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;ocurrio un error al guardar los cambios
+        </div>
+    {% elseif flag == 2 %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;Contraseña ingresada NO es válida
+        </div>
+    {% endif %}
+
+
+	<section>
+		<div class="page-header">
+			<h5 class="text-muted">Editar Rut</h5>
+		</div>
+		<form action="{{path('_edit_rut')}}" method="POST">
+		 	<div class="form-group">
+		 		<label class="text-info">Rut</label>
+		    	<input type="text" id="rut" name="_rut" class="form-control" placeholder="RUT" value="{{dataP.id}}" required autofocus>
+		    	<span id="icon_rut" class="glyphicon form-control-feedback" aria-hidden="true"></span>
+		    </div>
+	    	<div class="modal-footer">
+		    	<button type="submit" class="btn btn-primary"><i class="fa fa-user"></i>&nbsp;Guardar</button>
+		    </div>
+		</form>
+	</section>
+
+
+	<section>
+		<div class="page-header">
+			<h5 class="text-muted">Editar Datos</h5>
+		</div>
+		<form action="{{path('_edit_account')}}" method="POST">
+			<div class="row">
+				<div class="col-md-4">
+				 	<div class="form-group">
+				 		<label class="text-info">Nombre</label>
+			        	<input type="text" id="nombre" name="_nombre" class="form-control" placeholder="Nombre" value="{{dataP.nombre}}" required autofocus>
+			        </div>
+				</div>
+				<div class="col-md-4">
+				 	<div class="form-group">
+				 		<label class="text-info">Apellido Paterno</label>
+			        	<input type="text" id="apallido_p" name="_apellido_p" class="form-control" placeholder="Apellido Paterno" value="{{dataP.apellidop}}"required autofocus>
+			        </div>
+				</div>
+				<div class="col-md-4">
+				 	<div class="form-group">
+				 		<label class="text-info">Apellido Materno</label>
+			        	<input type="text" id="apellido_m" name="_apellido_m" class="form-control" placeholder="Apellido Materno" value="{{dataP.apellidom}}" required autofocus>
+			        </div>
+				</div>
+			</div>
+
+		    <div class="modal-footer">
+		    	<button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i>&nbsp;Guardar</button>
+		    </div>
+		</form>
+	</section>
+
+
+	<section>
+		<div class="page-header">
+			<h5 class="text-muted">Editar Email</h5>
+		</div>
+		<form id="formEmail" action="{{path('_edit_email')}}" method="post" role="form" 
+                data-fv-message="This value is not valid"
+                data-fv-icon-valid="glyphicon glyphicon-ok"
+                data-fv-icon-invalid="glyphicon glyphicon-remove"
+                data-fv-icon-validating="glyphicon glyphicon-refresh">
+
+			<div class="form-group">
+		 		<label class="text-info">Email</label>
+		    	<input type="email" name="_email" class="form-control" placeholder="Email" value="{{dataL.email}}" required autofocus>
+		    </div>
+
+		    <div class="form-group">
+		    	<input type="email" name="_confirmEmail" class="form-control" placeholder="Confirmar Email" required autofocus>
+		    </div>
+
+		    <div class="modal-footer">
+		    	<button id="btn-email" class="btn btn-primary" type="submit"><i class="fa fa-envelope-o"></i>&nbsp;Guardar</button>
+		    </div>
+		</form>
+	</section>
+
+
+	<section>
+		<div class="page-header">
+			<h5 class="text-muted">Desactivar Cuenta</h5>
+		</div>
+		<form action="{{path('_edit_disabled')}}" method="POST">
+		 	<div class="form-group">
+		 		<label class="text-info">Contraseña</label>
+		    	<input type="password" id="password" name="_password" class="form-control" placeholder="Contraseña" required autofocus>
+		    </div>
+		    <div class="modal-footer">
+		    	<button type="submit" class="btn btn-primary"><i class="fa fa-sign-out"></i>&nbsp;Desactivar</button>
+		    </div>
+	    </form>
+	</section>
+
+
+	<script type="text/javascript">
+	$(document).ready(function(){
+		exist();
+		
+ 		//validar rut
+        $("#rut")
+        .rut({formatOn: 'keyup', validateOn: 'keyup'})
+        .on('rutInvalido', function(){ 
+            $(this).parents(".form-group").removeClass("has-success has-feedback");
+            $(this).parents(".form-group").addClass("has-error has-feedback");
+            $('#icon_rut').removeClass("glyphicon-ok");
+            $('#icon_rut').addClass("glyphicon-remove");
+        })
+        .on('rutValido', function(){ 
+            $(this).parents(".form-group").removeClass("has-error has-feedback");
+            $(this).parents(".form-group").addClass("has-success has-feedback");
+            $('#icon_rut').removeClass("glyphicon-remove");
+            $('#icon_rut').addClass("glyphicon-ok");
+        });
+
+        $('#formEmail').formValidation({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            _email: {
+                validators: {
+                    notEmpty: {
+                        message: 'The email is required and can\'t be empty'
+                    }
+                }
+            },
+            _confirmEmail: {
+                validators: {
+                    notEmpty: {
+                        message: 'The confirm email is required and can\'t be empty'
+                    },
+                    identical: {
+                        field: '_email',
+                        message: 'The email and its confirm are not the same'
+                    }
+                }
+            }
+        }
+    });
+
+    function exist(){
+        if($('.alert') != null ){
+            setTimeout(function(){ $('.alert').hide(1000); }, 5000);
+        }
+    };
+    });
+    </script>
+{% endblock %}

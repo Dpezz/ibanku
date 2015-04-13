@@ -1,0 +1,23 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+   	{{parent()}}
+{% endblock %}
+
+{% block javascripts %}
+	{{parent()}}
+{% endblock %}
+
+{% block body %}
+
+	{% block head %}
+		{% embed 'IBKDemoBundle:Layout:page_navbar.html.twig' %}
+		{% block navbar %}
+			{{ parent() }}
+		{% endblock %}
+		{% endembed %}
+	{% endblock %}
+	{% block content %}{% endblock %}
+
+{% endblock %}
+

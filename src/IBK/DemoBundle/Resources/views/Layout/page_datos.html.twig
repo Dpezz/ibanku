@@ -1,0 +1,81 @@
+{% extends 'IBKDemoBundle:Layout:page.html.twig' %}
+
+{% block title %}titulo{% endblock %}
+
+{% block stylesheets %}
+    {{parent()}}
+    <link rel="stylesheet" href="{{ asset('bundles/ibkdemo/datetimepicker/css/bootstrap-datetimepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/ibkdemo/dashboard/dashboard.css') }}">
+{% endblock %}
+
+
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{ asset('bundles/ibkdemo/datetimepicker/js/moment.js') }}"></script>
+    <script src="{{ asset('bundles/ibkdemo/datetimepicker/js/bootstrap-datetimepicker.js') }}"></script>
+ 	<script src="{{ asset('bundles/ibkdemo/jquery_rut/jquery.rut.min.js') }}"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-3 col-md-2 sidebar" >
+
+		    <ul class="nav sidenav">
+	    	{% block menu %}
+		        <li><a href="#cupcake"><i class="fa fa-home"></i>&nbsp;Inicio</a></li>
+		        
+		        <li><a><i class="fa fa-user"></i>&nbsp;Mis Datos</a>
+			        <ul class="nav">
+			        {% block submenu_personales %}
+			        	<li class=""><a href="{{path('_personal_personal')}}">Personales</a></li>
+			        {% endblock %}
+
+			        {% block submenu_activos %}
+			        	<li class=""><a href="{{path('_activos_cuentas')}}">Activos</a></li>
+			        {% endblock %}
+
+			        {% block submenu_pasivos %}
+				        <li class=""><a href="#">Pasivos</a></li>
+			        {% endblock %}
+
+			        </ul>
+		        </li>
+
+		        <li><a href="{{path('_profile_documentos')}}"><i class="fa fa-file"></i>&nbsp;Documentos</a></li>
+		        <li><a href="{{path('_profile_permisos')}}"><i class="fa fa-unlock"></i>&nbsp;Permisos</a></li>
+		        <li><a href="#"><i class="fa fa-calculator"></i>&nbsp;Simulador</a></li>
+
+		        <li class="divider"><hr></li>
+
+		        <li class=""><a href="{{path('_profile_secured_account')}}"><i class="fa fa-cog"></i>&nbsp;Cuenta</a></li>
+		        <li class=""><a href="{{path('_profile_secured_password')}}"><i class="fa fa-lock"></i>&nbsp;Contraseña</a></li>
+		        <li class=""><a href="{{path('_profile_imagen')}}"><i class="fa fa-image"></i>&nbsp;Imagen</a></li>
+		        <li class=""><a href="#"><i class="fa fa-question-circle"></i>&nbsp;Ayuda</a></li>
+
+	         	<li class="divider"><hr></li>
+
+		        <li class=""><a href="{{path('_demo_logout')}}"><i class="fa fa-sign-out"></i>&nbsp;Salir</a></li> 
+		        {% endblock %}
+		    </ul>
+		</div>
+
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+		    <div class="row">
+			    <div class="col-md-4">
+			      <h4 class="text-muted">{% block subtitle %}{% endblock %}</h4>
+			    </div>
+
+			    <div class="col-md-8">
+			      	<ul class="nav nav-pills pull-right">
+			      		{% block menubar %}{% endblock %}
+			      	</ul> 
+			    </div>
+		  	</div>
+		  	<hr>
+			{% block datos %}{% endblock %}
+		</div>
+	</div>
+</div>
+{% endblock %}

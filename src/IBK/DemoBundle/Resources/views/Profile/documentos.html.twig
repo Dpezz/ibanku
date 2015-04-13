@@ -1,0 +1,13 @@
+{% extends 'IBKDemoBundle:Layout:page_datos.html.twig' %}
+
+{% block title %}Documentos{% endblock %}
+
+{% block subtitle %}Documentos{% endblock %}
+
+
+{% block datos %}
+	{% include 'IBKDemoBundle:EditDatos:datosDocumentos.html.twig' %}
+	{% block datos_documentos %}
+		{{parent()}}
+	{% endblock %}
+{% endblock %}

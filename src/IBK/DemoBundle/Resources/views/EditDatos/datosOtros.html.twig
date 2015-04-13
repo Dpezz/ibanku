@@ -1,0 +1,205 @@
+{% block datos_otros %}
+{# alerta resultado del formulario #}
+    {% if flag == 1 %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-check-circle"></i>&nbsp;<strong>Finalizado!</strong>&nbsp;cambios realizados con exito
+        </div>
+    {% elseif flag == 0 %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;ocurrio un error al guardar los cambios
+        </div>
+    {% endif %}
+
+  <div class="table-responsive">
+    <table class="table table-hover">
+     	<thead>
+          <tr>
+              <th>#</th>
+              <th>Descripción</th>
+              <th>Valor Comercial</th>
+              <th>En Prenda</th>
+            	<th>Editar/Eliminar</th>
+          </tr>
+    	</thead>
+    	<tbody>
+        {% for item in datosO %}
+            <tr>
+              	<td><span class="badge ">{{loop.index}}</span></td>
+              	<td>{{item.descripcion}}</td>
+                <td>${{item.valor|number_format}}</td>
+                <td>{% if item.enprenda == 1 %}Si{% else %}No{% endif %}</td>
+  	            <td>
+                <a href="#" data-toggle="modal" data-target="#new_otro" onclick="edit_otro('{{item.id}}','{{item.descripcion}}','{{item.valor}}','{{item.enprenda}}','{{item.afavor}}')"><i class="fa fa-edit text-primary"></i></a>&emsp;-&emsp;
+                <a href="#" data-toggle="modal" data-target="#delete_otro" onclick="delete_otro('{{item.id}}','{{item.descripcion}}')"><i class="fa fa-trash text-danger"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <br>
+  <br>
+
+  <div class="modal-footer">
+  	<button class="btn btn-primary pull-left" data-toggle="modal" data-target="#new_otro" onclick="reset()"><i class="fa fa-plus-circle"></i>&nbsp;Nueva</button>
+    <a class="btn btn-default" href="{{path('_activos_otros')}}"><i class="fa fa-arrow-right"></i>&nbsp;Siguiente</a>
+  </div>
+
+  <script type="text/javascript">
+    exist();
+    function edit_otro(id,descripcion,valor,en_prenda,a_favor){
+      $("input[name='_id']").val(id); 
+      $("input[name='_valor']").val(valor); 
+      $("#descripcion").html(descripcion); 
+      enprenda_activar(en_prenda,a_favor);
+      $("#formOtro").attr("action","{{path('_edit_otro')}}");
+    }
+
+    function delete_otro(id,name){
+      $('#nombre').html(name);
+      $('#id').val(id);
+    }
+
+    function reset(){
+      $("input[name='_id']").val(''); 
+      $("input[name='_valor']").val(''); 
+      $("#descripcion").html(''); 
+      $("#enprenda option[value='']").attr("selected", "selected");
+      $("input[name='_a_favor']").val('');
+      $("#formOtro").attr("action","{{path('_new_otro')}}");
+    }
+
+    function enprenda_activar(number,a_favor){
+      if(number == 1){
+          $("#enprenda option[value='1']").attr("selected", "selected");
+          $('#formFavor').show();
+          $("input[name='_a_favor']").attr('required','required');
+          $("input[name='_a_favor']").val(a_favor);
+      }else{
+          $("#enprenda option[value='0']").attr("selected", "selected");
+          $('#formFavor').hide();
+          $("input[name='_a_favor']").removeAttr('required');
+          $("input[name='_a_favor']").val('');
+      }
+    }
+
+    function exist(){
+        if($('.alert') != null ){
+        setTimeout(function(){ $('.alert').hide(1000); }, 5000);
+        }
+    };
+  </script>
+{% endblock %}
+
+
+{% block new_otro %}
+<!-- Modal -->
+<div class="modal fade" id="new_otro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Otro Nuevo Activo</h4>
+            </div>
+            <div class="modal-body">
+             
+              <form id="formOtro" action="{{path('_new_otro')}}" method="POST">
+
+                <input type="hidden" name="_id">
+
+                  <div class="form-group">
+                    <label class="text-info">Descripción</label>
+                    <textarea class="form-control" rows="2" id="descripcion" name="_descripcion" placeholder="Referencia, domicilio,etc" autofocus required></textarea>
+                  </div>
+
+
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div class="form-group">
+                              <label class="text-info">Valor Comercial</label>
+                              <input type="number" class="form-control input-sm" name="_valor" placeholder="$" autofocus required>
+                          </div>
+                      </div>
+                  </div>
+
+
+                  <div class="row">
+                      <div class="col-md-6">
+                           <div class="form-group">
+                              <label class="text-info">En Prenda</label>
+                              <select class="form-control input-sm" id="enprenda" name="_en_prenda_otro" autofocus required>
+                                  <option value=''>- En Prenda -</option>
+                                  <option value="1">Si</option>
+                                  <option value="0">No</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div id="formFavor" class="form-group">
+                              <label class="text-info">En Prenda a favor de Quien?</label>
+                              <input type="text" class="form-control input-sm" id="afavor" name="_a_favor" autofocus>
+                          </div>
+                      </div>
+                  </div>
+
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+                </div>
+
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+  $('#enprenda').change(function(){
+    if($('#enprenda').val() == 1){
+      $('#formFavor').show();
+      $('#afavor').attr('required','required');
+    }else{
+      $('#formFavor').hide();
+      $('#afavor').removeAttr('required');
+    }
+  })
+</script>
+{% endblock %}
+
+
+{% block delete_otro %}
+<!-- Modal -->
+<div class="modal fade" id="delete_otro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Eliminar Otro Activo</h4>
+            </div>
+            <div class="modal-body">
+             
+              <form action="{{path('_delete_otro')}}" method="POST">
+
+                <input type="hidden" id="id" name="_id">
+                <h5 class="text-muted text-center">¿Estás seguro que deseas eliminar el activo 
+                  <strong><span id="nombre"></span></strong>?
+                </h5>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-trash"></i>&nbsp;Eliminar</button>
+                </div>
+
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

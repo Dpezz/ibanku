@@ -1,0 +1,3 @@
+ibk_demo:
+    resource: "@IBKDemoBundle/Resources/config/routing.yml"
+

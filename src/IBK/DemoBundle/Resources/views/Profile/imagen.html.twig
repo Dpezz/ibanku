@@ -1,0 +1,13 @@
+{% extends 'IBKDemoBundle:Layout:page_datos.html.twig' %}
+
+{% block title %}Imagen{% endblock %}
+
+{% block subtitle %}Editar Imagen{% endblock %}
+
+
+{% block datos %}
+	{% include 'IBKDemoBundle:EditDatos:datosImagen.html.twig' %}
+	{% block datos_imagen %}
+		{{parent()}}
+	{% endblock %}
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'IBKDemoBundle:Layout:page.html.twig' %}
+
+{% block title %}Recuperar{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+	{% if app.user %}
+		<br>
+		<br>
+	{% endif %}
+
+	<div class="page-header">
+		<h3 class="text-muted">Recuperar contraseña</h3>
+	</div>
+
+	{# alerta resultado del formulario #}
+    {% if flag == 1 %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-check-circle"></i>&nbsp;<strong>Finalizado!</strong>&nbsp;Se ha enviado un email a su Correo Electrónico
+        </div>
+    {% elseif flag == 0 %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;ocurrio un error al enviar el email
+        </div>
+    {% elseif flag == 2 %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;Ingrese Correo Electrónico correcto
+        </div>
+    {% endif %}
+
+
+	<form action="{{path('_profile_secured_resend')}}" method="POST">
+		<div class="form-group">
+			<label class="text-info">Correo Electrónico</label>
+			<input type="email" class="form-control" name="_email" placeholder="Correo Electrónico" autofocus required>
+		</div>
+
+
+		<div class="modal-footer">
+			<a class="pull-left" href="{{path('_profile_secured_password')}}"><i class="fa fa-long-arrow-left"></i>&nbsp;Volver</a>
+
+	        <button type="submit" class="btn btn-primary">
+	        	<i class="fa fa-envelope"></i>&nbsp;Recuperar
+	        </button>
+	    </div>
+	</form>
+    
+</div>
+<script type="text/javascript">
+	exist();
+    function exist(){
+        if($('.alert') != null ){
+        setTimeout(function(){ $('.alert').hide(1000); }, 5000);
+        }
+    };
+</script>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% block datos_documentos %}
+{# alerta resultado del formulario #}
+  {% if flag == 1 %}
+      <div class="alert alert-success alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert">
+              <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+          </button>
+          <i class="fa fa-check-circle"></i>&nbsp;<strong>Finalizado!</strong>&nbsp;cambios realizados con exito
+      </div>
+  {% elseif flag == 0 %}
+      <div class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert">
+              <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+          </button>
+          <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;ocurrio un error al guardar los cambios
+      </div>
+  {% endif %}
+
+<div class="table-responsive">
+  <table class="table table-hover">
+   	<thead>
+        <tr>
+      		<th>#</th>
+            <th>Title</th>
+          	<th>Descripción</th>
+          	<th>Size</th>
+          	<th>type</th>
+          	<th>upload by</th>
+          	<th>Descargar / Eliminar</th>
+        </tr>
+  	</thead>
+  	<tbody>
+      {% for item in datosD %}
+        <tr>
+          	<td><span class="badge ">{{loop.index}}</span></td>
+          	<td><span class="text-info">{{item.title}}</span></td>
+            <td><em>{{item.descripcion}}</em></td>
+          	<td>{{item.size}}</td>
+          	<td>{{item.type}}</td>
+          	<td>{{item.uploadBy}}</td>
+          	<td>
+              <a href="#"><i class="fa fa-download text-primary"></i></a>
+              &emsp;-&emsp;
+              <a href="#" data-toggle="modal" data-target="#delete_document" onclick="delete_cuenta('{{item.id}}','{{item.title}}')"><i class="fa fa-trash text-danger"></i></a>
+            </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+  </table>
+</div>
+
+<br>
+<br>
+<div class="modal-footer">
+	<button class="btn btn-primary pull-left" data-toggle="modal" data-target="#new_document" onclick="reset()"><i class="fa fa-plus-circle"></i>&nbsp;Nueva</button>
+  <a class="btn btn-default" href="{{path('_profile_documentos')}}"><i class="fa fa-arrow-right"></i>&nbsp;Siguiente</a>
+</div>
+<script type="text/javascript">
+  exist();
+  
+  function delete_cuenta(id,name){
+    $('#nombre').html(name);
+    $('#id').val(id);
+  }
+
+  function exist(){
+      if($('.alert') != null ){
+        setTimeout(function(){ $('.alert').hide(1000); }, 5000);
+      }
+  };
+</script>
+{% endblock %}
+
+
+
+
+{% block new_document %}
+<!-- Modal -->
+<div class="modal fade" id="new_document" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Nueva Cuenta</h4>
+            </div>
+            <div class="modal-body">
+
+             //code..
+              
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block delete_document %}
+<!-- Modal -->
+<div class="modal fade" id="delete_document" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Eliminar Cuenta</h4>
+            </div>
+            <div class="modal-body">
+             
+              <form action="{{path('_delete_cuenta')}}" method="POST">
+
+                <input type="hidden" id="id" name="_id">
+                <h5 class="text-muted text-center">¿Estás seguro que deseas eliminar documento 
+                  <strong><span id="nombre"></span></strong>?
+                  
+                </h5>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-trash"></i>&nbsp;Eliminar</button>
+                </div>
+
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

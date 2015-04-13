@@ -1,0 +1,607 @@
+{% block datos_academicos %}
+{# alerta resultado del formulario #}
+    {% if flag == 1 %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-check-circle"></i>&nbsp;<strong>Finalizado!</strong>&nbsp;cambios realizados con exito
+        </div>
+    {% elseif flag == 0 %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;ocurrio un error al guardar los cambios
+        </div>
+    {% endif %}
+
+    
+<div class="panel">
+  	<div class="panel-body">
+
+	<form action="{{path('_edit_academico')}}" method="POST">
+        <div class="row">
+            <div class="col-md-6">        
+                <div class="form-group">
+                    <label class="text-info">Educación</label>
+                    <select class="form-control input-sm" id="educacion" name="_educacion" autofocus required>
+                        <option value=''>- Nivel de Educacíon -</option>
+                        {% set items = educacion|split(',') %}
+                        {% for item in items %}
+                            {% if item == dataA.educacion %}
+                                <option value="{{item}}" selected>{{item}}</option>
+                            {% else %}
+                                <option value="{{item}}">{{item}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">      
+                <div class="form-group">
+                    <label class="text-info">Universidad o Instituto</label>
+                    {% if (dataA.educacion == "Universitaria") or (dataA.educacion == "Técnica") %}
+                        <input type="text" class="form-control input-sm" id="universidad" name="_universidad" value="{{dataA.universidad}}" placeholder="Universidad o Instituto" autofocus required>
+                    {% else %}
+                        <input type="text" class="form-control input-sm" id="universidad" name="_universidad" value="{{dataA.universidad}}" placeholder="Universidad o Instituto" autofocus>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">      
+                <div class="form-group">
+                    <label class="text-info">Profesión u Oficio</label>
+                    {% if dataA.educacion == "Universitaria" %}
+                    <input type="text" class="form-control input-sm" id="profesion" name="_profesion" value="{{dataA.profesion}}" placeholder="Profesión u Oficio" autofocus required>
+                    {% else %}
+                    <input type="text" class="form-control input-sm" id="profesion" name="_profesion" value="{{dataA.profesion}}" placeholder="Profesión u Oficio" autofocus>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-6">      
+                <div class="form-group">
+                    <label class="text-info">Actividad Economica</label>
+                     <select class="form-control input-sm" id="economia" name="_economia" autofocus required>
+                        <option value=''>- Actividad Economica -</option>
+                        {% set items = economia|split(',') %}
+                        {% for item in items %}
+                            {% if item == dataA.economia %}
+                                <option value="{{item}}" selected>{{item}}</option>
+                            {% else %}
+                                <option value="{{item}}">{{item}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        
+{# formulario de Dependiente #}
+    <section id="dependiente" hidden>
+        <hr>
+        <div class="well well-sm">
+
+            <div class="row">
+                <div class="col-md-12">      
+                    <div class="form-group">
+                        <label class="text-info">Empresa Empleadora</label>
+                        <input type="text" name="_empresa_d" class="form-control input-sm" value="{% if dataD %}{{dataD.empresa}}{% endif %}" placeholder="Empresa Empleadora" autofocus>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">      
+                    <div class="form-group">
+                        <label class="text-info">Rut de Empleadora</label>
+                        <input type="text" name="_rut_d" class="form-control input-sm" value="{% if dataD %}{{dataD.rut}}{% endif %}" placeholder="Rut de Empleadora" autofocus>
+                    </div>
+                </div>
+
+                <div class="col-md-6">      
+                    <div class="form-group">
+                        <label class="text-info">Giro de Empleadora</label>
+                        <input type="text" name="_giro_d" class="form-control input-sm" value="{% if dataD %}{{dataD.giro}}{% endif %}" placeholder="Giro de Empleadora" autofocus>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">      
+                    <div class="form-group">
+                        <label class="text-info">Cargo actual</label>
+                        <input type="text" name="_cargo_d" class="form-control input-sm" value="{% if dataD %}{{dataD.cargo}}{% endif %}" placeholder="Cargo actual" autofocus>
+                    </div>
+                </div>
+
+                <div class="col-md-6">      
+                    <div class="form-group">
+                        <label class="text-info">Domicilio Laboral</label>
+                        <input type="text" name="_domicilio_d" class="form-control input-sm" value="{% if dataD %}{{dataD.domicilio}}{% endif %}" placeholder="Domicilio Laboral" autofocus>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">      
+                    <div class="form-group">
+                        <label class="text-info">Región</label>
+                         <select class="form-control input-sm" id="region-d" name="_region_d">
+                            <option value=''>- Seleccionar Región -</option>
+                            {% set items = region|split(',') %}
+                            {% for item in items %}
+                                {% if dataD and item == dataD.region %}
+                                    <option value="{{item}}" selected>{{item}}</option>
+                                {% else %}
+                                    <option value="{{item}}">{{item}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">        
+                    <div class="form-group">
+                        <label class="text-info">Comuna</label>
+                        <select class="form-control input-sm" id="comuna-d" name="_comuna_d">
+                            <option>- Seleccionar Comuna -</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+             <div class="row">
+                <div class="col-md-6">        
+                    <div class="form-group">
+                        <label class="text-info">Tipo de Contrato</label>
+                        <select class="form-control input-sm" name="_contrato_d">
+                            <option value=''>- Tipo de Contrato -</option>
+                            {% set items = contrato|split(',') %}
+                            {% for item in items %}
+                                {% if dataD and item == dataD.contrato %}
+                                    <option value="{{item}}" selected>{{item}}</option>
+                                {% else %}
+                                    <option value="{{item}}">{{item}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">      
+                    <div class="form-group">
+                    <label class="text-info">Fecha Ingreso</label>
+                    {% if dataD %}
+                        {% set item = dataD.fechaingreso|date('d') ~'/'~dataD.fechaingreso|date('m') ~'/'~dataD.fechaingreso|date('Y')%}
+                    {% endif %}
+                        <input type="text" id="fecha_ingreso" name="_fecha_ingreso_d" class="form-control input-sm" value="{% if dataD %}{{item}}{% endif %}" data-date-format="DD/MM/YYYY" placeholder="Fecha Ingreso" autofocus>
+                    </div>
+                </div>
+            </div>
+                 
+             <div class="row">
+                <div class="col-md-4">      
+                    <div class="form-group">
+                        <label class="text-info">Tipo Remuneración</label>
+                         <select class="form-control input-sm" name="_remuneracion_d">
+                            <option value=''>- Tipo Remuneraciones -</option>
+                            {% set items = remuneracion|split(',') %}
+                            {% for item in items %}
+                                {% if dataD and item == dataD.remuneracion %}
+                                    <option value="{{item}}" selected>{{item}}</option>
+                                {% else %}
+                                    <option value="{{item}}">{{item}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">      
+                    <div class="form-group">
+                        <label class="text-info">Renta Liquida Mensual</label>
+                        <input type="number" name="_renta_d" class="form-control input-sm" value="{% if dataD %}{{dataD.renta}}{% endif %}" placeholder="Renta Liquida Mensual" autofocus>
+                    </div>
+                </div>
+
+                <div class="col-md-4">     
+                    <div class="form-group">
+                        <label class="text-info">Telefono Empresa</label>
+                        <input type="text" name="_telefono_d" class="form-control input-sm" value="{% if dataD %}{{dataD.telefono}}{% endif %}" placeholder="Telefono Empresa" autofocus>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('#fecha_ingreso').datetimepicker({ pickTime: false });
+                //Cargar los Datos de Comuna
+                {% if dataD and dataD.region is not empty %}
+                $.ajax({
+                        url: '{{url('_load_comuna')}}',
+                        method: "post",
+                        data:{'region': '{{dataD.region}}' },
+                        success: function(item){
+                            var comuna = item.split(',');
+                            $("#comuna-d").html('');
+                            $("<option value=''>- Seleccionar Comuna -</option>").appendTo("#comuna-d");
+                            for (var i = 0; i < comuna.length; i++) {
+                                if(comuna[i] == '{{dataD.comuna}}'){
+                                    $("<option value='"+comuna[i]+"' selected>"+comuna[i]+"</option>").appendTo("#comuna-d");
+                                }
+                                else{
+                                    $("<option value='"+comuna[i]+"'>"+comuna[i]+"</option>").appendTo("#comuna-d");
+                                }
+                            };
+                        }
+                });
+
+                {% else %}
+                    $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna-d");
+                {% endif %}
+
+
+                //Cargar Comunas
+                $('#region-d').change(function(){
+                    if($('#region-d').val() != ''){
+                        $.ajax({
+                        url: '{{path('_load_comuna')}}',
+                        data: {'region': $('#region-d').val() },
+                        method: "post",
+                        success: function(item){
+                            //activar CB comunas
+                            $('#comuna-d').removeAttr('disabled');
+                            var comunas = item.split(',');
+                            $("#comuna-d").html('');
+
+                            $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna-d");
+                            for (var i = 0; i < comunas.length; i++) {
+                                $("<option value='"+comunas[i]+"'>"+comunas[i]+"</option>").appendTo("#comuna-d");
+                            };
+                        }
+                        });
+                    }else{
+                        //desactivar CB comunas
+                        $('#comuna-d').attr('disabled','disabled');
+                        $("#comuna-d").html('');
+                        $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna-d");
+                    }
+                })
+            })
+        </script>
+    </section>
+
+{# formulario de Profesional Independiente #}
+    <section id="independiente" hidden>
+    <hr>
+        <div class="well well-sm">
+            <div class="row">
+                <div class="col-md-6">      
+                    <div class="form-group">
+                        <label class="text-info">Servicios Profesionales</label>
+                        <input type="text" name="_servicio_i" class="form-control input-sm" value="{% if dataI %}{{dataI.servicio}}{% endif %}" placeholder="Servicios Profesionales" autofocus>
+                    </div>
+                </div>
+
+                <div class="col-md-6">      
+                    <div class="form-group">
+                        <label class="text-info">Domicilio Profesional</label>
+                        <input type="text" name="_domicilio_i" class="form-control input-sm" value="{% if dataI %}{{dataI.domicilio}}{% endif %}" placeholder="Domicilio Profesional" autofocus>
+                    </div>
+                </div>
+            </div>
+
+             <div class="row">
+                <div class="col-md-6">      
+                    <div class="form-group">
+                        <label class="text-info">Región</label>
+                         <select class="form-control input-sm" id="region-i" name="_region_i">
+                            <option value=''>- Seleccionar Región -</option>
+                            {% set items = region|split(',') %}
+                            {% for item in items %}
+                                {% if dataI and item == dataI.region %}
+                                    <option value="{{item}}" selected>{{item}}</option>
+                                {% else %}
+                                    <option value="{{item}}">{{item}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">        
+                    <div class="form-group">
+                        <label class="text-info">Comuna</label>
+                        <select class="form-control input-sm" id="comuna-i" name="_comuna_i">
+                            <option>- Seleccionar Comuna -</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">      
+                    <div class="form-group">
+                        <label class="text-info">Antiguedad</label>
+                        <input type="number" name="_antiguedad_i" class="form-control input-sm" value="{% if dataI %}{{dataI.antiguedad}}{% endif %}" placeholder="Antiguedad" autofocus>
+                    </div>
+                </div>
+
+                <div class="col-md-6">      
+                    <div class="form-group">
+                        <label class="text-info">Renta Liquida Mensual</label>
+                        <input type="number" name="_renta_i" class="form-control input-sm" value="{% if dataI %}{{dataI.renta}}{% endif %}" placeholder="Renta Liquida Mensual" autofocus>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                //Cargar los Datos de Comuna
+                {% if dataI and dataI.region is not empty %}
+                $.ajax({
+                        url: '{{url('_load_comuna')}}',
+                        method: "post",
+                        data:{'region': '{{dataI.region}}' },
+                        success: function(item){
+                            var comuna = item.split(',');
+                            $("#comuna-i").html('');
+                            $("<option value=''>- Seleccionar Comuna -</option>").appendTo("#comuna-i");
+                            for (var i = 0; i < comuna.length; i++) {
+                                if(comuna[i] == '{{dataI.comuna}}'){
+                                    $("<option value='"+comuna[i]+"' selected>"+comuna[i]+"</option>").appendTo("#comuna-i");
+                                }
+                                else{
+                                    $("<option value='"+comuna[i]+"'>"+comuna[i]+"</option>").appendTo("#comuna-i");
+                                }
+                            };
+                        }
+                });
+
+                {% else %}
+                    $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna-i");
+                {% endif %}
+
+
+                //Cargar Comunas
+                $('#region-i').change(function(){
+                    if($('#region-i').val() != ''){
+                        $.ajax({
+                        url: '{{path('_load_comuna')}}',
+                        data: {'region': $('#region-i').val() },
+                        method: "post",
+                        success: function(item){
+                            //activar CB comunas
+                            $('#comuna-i').removeAttr('disabled');
+                            var comunas = item.split(',');
+                            $("#comuna-i").html('');
+
+                            $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna-i");
+                            for (var i = 0; i < comunas.length; i++) {
+                                $("<option value='"+comunas[i]+"'>"+comunas[i]+"</option>").appendTo("#comuna-i");
+                            };
+                        }
+                        });
+                    }else{
+                        //desactivar CB comunas
+                        $('#comuna-i').attr('disabled','disabled');
+                        $("#comuna-i").html('');
+                        $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna-i");
+                    }
+                })
+            })
+        </script>
+    </section>
+
+{# formulario de Profesional Natural #}
+    <section id="natural" hidden>
+        <hr>
+        <div class="well well-sm" >
+
+            <div class="row">
+                <div class="col-md-6">      
+                    <div class="form-group">
+                        <label class="text-info">Giro Comercial</label>
+                        <input type="text" name="_giro_n" class="form-control input-sm" value="{% if dataN %}{{dataN.giro}}{% endif %}" placeholder="Giro Comercial" autofocus>
+                    </div>
+                </div>
+
+                <div class="col-md-6">      
+                    <div class="form-group">
+                        <label class="text-info">Domicilio Comercial</label>
+                        <input type="text" name="_domicilio_n" class="form-control input-sm" value="{% if dataN %}{{dataN.domicilio}}{% endif %}" placeholder="Domicilio Comercial" autofocus>
+                    </div>
+                </div>
+            </div>
+
+             <div class="row">
+                <div class="col-md-6">      
+                    <div class="form-group">
+                        <label class="text-info">Región</label>
+                         <select class="form-control input-sm" id="region-n" name="_region_n">
+                            <option value=''>- Seleccionar Región -</option>
+                            {% set items = region|split(',') %}
+                            {% for item in items %}
+                                {% if dataN and item == dataN.region %}
+                                    <option value="{{item}}" selected>{{item}}</option>
+                                {% else %}
+                                    <option value="{{item}}">{{item}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">        
+                    <div class="form-group">
+                        <label class="text-info">Comuna</label>
+                        <select class="form-control input-sm" id="comuna-n" name="_comuna_n">
+                            <option>- Seleccionar Comuna - </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">      
+                    <div class="form-group">
+                    <label class="text-info">Fecha Inicio SII</label>
+                    {% if dataN %}
+                        {% set item = dataN.fechasii|date('d') ~'/'~dataN.fechasii|date('m') ~'/'~dataN.fechasii|date('Y')%}
+                    {% endif %}
+                        <input type="text" id="fecha-sii" name="_fecha_sii_n" class="form-control input-sm" value="{% if dataN %}{{item}}{% endif %}" data-date-format="DD/MM/YYYY" placeholder="Fecha Inicio SII" autofocus>
+                    </div>
+                </div>
+
+                <div class="col-md-4">      
+                    <div class="form-group">
+                        <label class="text-info">Antiguedad</label>
+                        <input type="number" name="_antiguedad_n" class="form-control input-sm" value="{% if dataN %}{{dataN.antiguedad}}{% endif %}" placeholder="Antiguedad" autofocus>
+                    </div>
+                </div>
+
+                <div class="col-md-4">      
+                    <div class="form-group">
+                        <label class="text-info">Promedio ventas mensuales</label>
+                        <input type="number" name="_ventas_n" class="form-control input-sm" value="{% if dataN %}{{dataN.ventas}}{% endif %}" placeholder="Promedio ventas mensuales" autofocus>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('#fecha-sii').datetimepicker({ pickTime: false });
+                //Cargar los Datos de Comuna
+                {% if dataN and dataN.region is not empty %}
+                $.ajax({
+                        url: '{{url('_load_comuna')}}',
+                        method: "post",
+                        data:{'region': '{{dataN.region}}' },
+                        success: function(item){
+                            var comuna = item.split(',');
+                            $("#comuna-n").html('');
+                            $("<option value=''>- Seleccionar Comuna -</option>").appendTo("#comuna-n");
+                            for (var i = 0; i < comuna.length; i++) {
+                                if(comuna[i] == '{{dataN.comuna}}'){
+                                    $("<option value='"+comuna[i]+"' selected>"+comuna[i]+"</option>").appendTo("#comuna-n");
+                                }
+                                else{
+                                    $("<option value='"+comuna[i]+"'>"+comuna[i]+"</option>").appendTo("#comuna-n");
+                                }
+                            };
+                        }
+                });
+
+                {% else %}
+                    $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna-n");
+                {% endif %}
+
+
+                //Cargar Comunas
+                $('#region-n').change(function(){
+                    if($('#region-n').val() != ''){
+                        $.ajax({
+                        url: '{{path('_load_comuna')}}',
+                        data: {'region': $('#region-n').val() },
+                        method: "post",
+                        success: function(item){
+                            //activar CB comunas
+                            $('#comuna-n').removeAttr('disabled');
+                            var comunas = item.split(',');
+                            $("#comuna-n").html('');
+
+                            $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna-n");
+                            for (var i = 0; i < comunas.length; i++) {
+                                $("<option value='"+comunas[i]+"'>"+comunas[i]+"</option>").appendTo("#comuna-n");
+                            };
+                        }
+                        });
+                    }else{
+                        //desactivar CB comunas
+                        $('#comuna-n').attr('disabled','disabled');
+                        $("#comuna-n").html('');
+                        $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna-n");
+                    }
+                })
+            })
+        </script>
+    </section>
+
+
+	<div class="modal-footer">
+		<button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o"></i>&nbsp;Guardar</button>
+        <a class="btn btn-default" type="button" href="{{path('_activos_cuentas')}}"><i class="fa fa-arrow-right"></i>&nbsp;Siguiente</a>
+	</div>
+
+	</form>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        exist();
+        loadEconomia();
+
+        $('#economia').change(function(){
+            loadEconomia();
+        })
+
+        function ocultar(){
+            $('#dependiente').hide();
+            $('#independiente').hide();
+            $('#natural').hide();
+        }
+
+        function loadEconomia(){
+           if($('#economia').val() == "Trabajador(a) dependiente"){
+                ocultar();
+                $('#dependiente').show();
+            }
+            else if($('#economia').val() == "Profesional independiente"){
+                ocultar();
+                $('#independiente').show();
+            }
+            else if($('#economia').val() == "Persona natural con giro"){
+                ocultar();
+                $('#natural').show();
+            }
+            else{
+                ocultar();
+            }
+        }
+
+        $('#educacion').change(function(){
+            var educacion = $('#educacion').val();
+            if( educacion == "Universitaria" || educacion == "Técnica" ){
+                $('#universidad').attr('required','required');
+            }else{
+                $('#universidad').removeAttr('required');
+            }
+
+            if( educacion == "Universitaria"){
+                $('#profesion').attr('required','required');
+            }else{
+                $('#profesion').removeAttr('required');
+            }
+        })
+
+        function exist(){
+            if($('.alert') != null ){
+            setTimeout(function(){ $('.alert').hide(1000); }, 5000);
+            }
+        };
+        
+    })
+</script>
+{% endblock %}

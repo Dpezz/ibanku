@@ -1,0 +1,31 @@
+{% extends 'IBKDemoBundle:Layout:page_datos.html.twig' %}
+
+{% block title %}Datos Personales{% endblock %}
+
+{% block subtitle %}Datos Personales{% endblock %}
+
+{% block submenu_personales %}
+    <li role="presentation" class="active"><a href="#">Mis Datos</a></li>
+{% endblock %}
+
+{% block menubar %}
+    <li role="presentation" class="active"><a href="{{path('_personal_personal')}}">Personales</a></li>
+ 
+    {% if dataP.estadocivil == "Casado con separación de bienes" or dataP.estadocivil == "Casado con sociedad conyugal" %}
+      <li role="presentation"><a href="{{path('_personal_conyugue')}}">Cónyugue</a></li>
+    {% else %}
+      <li class="hide" role="presentation"><a>Cónyugue</a></li>
+    {% endif %}
+
+    <li role="presentation"><a href="{{path('_personal_academico')}}">Académicos</a></li>
+{% endblock %}
+
+
+{% block datos %}
+
+	{% include 'IBKDemoBundle:EditDatos:datosPersonales.html.twig' %}
+	{% block datos_personales %}
+		{{parent()}}
+	{% endblock %}
+
+{% endblock %}

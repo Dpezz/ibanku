@@ -1,0 +1,92 @@
+{% block signin %}
+{#
+  	<form action="{{ path("_demo_security_check") }}" method="post" role="form">
+
+  		<div class="row">
+          	<div class="col-md-8">
+			  	<div class="input-group form-group">
+  					<span class="input-group-addon"><i class="fa fa-user"></i></span>
+			    	<input type="text" id="username" name="_username" class="form-control" placeholder="Rut" required autofocus>
+			    </div>
+
+			    
+			    <div class="input-group form-group">
+  					<span class="input-group-addon"><i class="fa fa-lock"></i></span>
+			    	<input type="password" id="password" name="_password" class="form-control" placeholder="Contraseña" required>
+			    </div>
+
+			    <a style="color:#fff" href="{{path('_secured_resend')}}">¿olvidaste tu contraseña?</a>
+                &nbsp;<span style="color:#fff">-</span>&nbsp;
+                <a style="color:#fff" href="{{path('_demo_signup')}}">Regístrate</a>
+
+
+			    <div class="modal-footer">
+			    	<button class="btn btn-info" type="submit">
+			    		<i class="fa fa-sign-in fa-lg"></i>&nbsp;Iniciar Sesión
+			    	</button>
+		    	</div>
+	    	</div>
+ 		</div>
+  	</form>
+#}
+
+<br>
+<br>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+	  	<form action="{{ path("_demo_security_check") }}" method="post" role="form">
+
+	  		<div class="row">
+	          	<div class="col-md-4">
+				  	<div class="form-group">
+				    	<input type="text" id="username" name="_username" class="form-control input-lg" placeholder="Rut" required autofocus>
+				    </div>
+			    </div>
+
+				<div class="col-md-4">    
+				    <div class="form-group">
+				    	<input type="password" id="password" name="_password" class="form-control input-lg" placeholder="Contraseña" required>
+				    </div>
+			    </div>
+
+			    <div class="col-md-4">
+			    	<button class="btn btn-primary btn-lg" type="submit">
+			    		<i class="fa fa-sign-in fa-lg"></i>&nbsp;Iniciar Sesión
+			    	</button>
+		    	</div> 
+            </div>
+
+            <div class="modal-footer" style="border-top: 1px solid #eee;">
+            <h6 class="pull-left">
+			    <a style="color:#fff" href="{{path('_secured_resend')}}">¿olvidaste tu contraseña?</a>
+	                &nbsp;<span style="color:#fff">-</span>&nbsp;
+                <a style="color:#fff" href="{{path('_demo_signup')}}">Regístrate</a>
+            </h6>
+            </div> 
+
+	  	</form>
+
+  	{% if error %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;Rut y Contraseña no coinciden
+        </div>
+    {% endif %}
+  	</div>
+</div>
+
+<script type="text/javascript">
+	exist();
+	
+	$("input[name='_username']").rut({formatOn: 'keyup'});
+
+    function exist(){
+        if($('.alert') != null ){
+            setTimeout(function(){ $('.alert').hide(1000); }, 5000);
+        }
+    };
+
+</script>
+{% endblock %}

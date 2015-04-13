@@ -1,0 +1,28 @@
+{% extends 'IBKDemoBundle:Layout:page_datos.html.twig' %}
+
+{% block title %}Inversiones{% endblock %}
+
+{% block subtitle %}Inversiones{% endblock %}
+
+
+{% block submenu_activos %}
+    <li role="presentation" class="active"><a href="#">Activos</a></li>
+{% endblock %}
+
+
+{% block menubar %}
+    <li role="presentation"><a href="{{path('_activos_cuentas')}}">Cuentas</a></li>
+    <li role="presentation"><a href="{{path('_activos_vehiculos')}}">Vehiculos</a></li>
+    <li role="presentation"><a href="{{path('_activos_propiedades')}}">Propiedades</a></li>
+    <li role="presentation" class="active"><a href="{{path('_activos_inversiones')}}">Inversiones</a></li>
+    <li role="presentation"><a href="{{path('_activos_otros')}}">Otros activos</a></li>
+{% endblock %}
+
+
+{% block datos %}
+
+	{% include 'IBKDemoBundle:EditDatos:datosInversiones.html.twig' %}
+	{% block datos_inversiones %}
+		{{parent()}}
+	{% endblock %}
+{% endblock %}

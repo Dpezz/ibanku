@@ -1,0 +1,264 @@
+{% block datos_vehiculos %}
+{# alerta resultado del formulario #}
+  {% if flag == 1 %}
+      <div class="alert alert-success alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert">
+              <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+          </button>
+          <i class="fa fa-check-circle"></i>&nbsp;<strong>Finalizado!</strong>&nbsp;cambios realizados con exito
+      </div>
+  {% elseif flag == 0 %}
+      <div class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert">
+              <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+          </button>
+          <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;ocurrio un error al guardar los cambios
+      </div>
+  {% endif %}
+
+
+<div class="table-responsive">
+  <table class="table table-hover">
+   	<thead>
+        <tr>
+            <th>#</th>
+            <th>Año</th>
+          	<th>Marca</th>
+          	<th>Modelo</th>
+          	<th>Tipo</th>
+          	<th>Tasación</th>
+          	<th>Editar/Eliminar</th>
+        </tr>
+  	</thead>
+  	<tbody>
+      {% for item in datosV %}
+        <tr>
+          	<td><span class="badge ">{{loop.index}}</span></td>
+          	<td>{{item.año}}</td>
+          	<td>{{item.marca}}</td>
+            <td>{{item.modelo}}</td>
+          	<td>{{item.tipo}}</td>
+          	<td>${{item.valor|number_format}}</td>
+          	<td>
+            <a href="#" data-toggle="modal" data-target="#new_vechiculo" onclick="edit_vehiculo('{{item.id}}','{{item.marca}}','{{item.modelo}}','{{item.tipo}}','{{item.año}}','{{item.valor}}')"><i class="fa fa-edit text-primary"></i></a>
+                &emsp;-&emsp;
+            <a href="#" data-toggle="modal" data-target="#delete_vehiculo" onclick="delete_vehiculo('{{item.id}}','{{item.marca}}')"><i class="fa fa-trash text-danger"></i></a>
+            </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+
+
+  </table>
+</div>
+
+<br>
+<br>
+<div class="modal-footer">
+	<button class="btn btn-primary pull-left" data-toggle="modal" data-target="#new_vechiculo" onclick="reset()"><i class="fa fa-plus-circle"></i>&nbsp;Nueva</button>
+  <a class="btn btn-default" href="{{path('_activos_propiedades')}}"><i class="fa fa-arrow-right"></i>&nbsp;Siguiente</a>
+</div>
+
+
+<script type="text/javascript">
+  exist();
+
+  function edit_vehiculo(id,marca,modelo,tipo,año,valor){
+    $("input[name='_id']").val(id); 
+    $("input[name='_valor']").val(valor); 
+    $("#marca option[value='"+marca+"']").attr("selected", "selected");
+    $("#modelo option[value='"+modelo+"']").attr("selected", "selected");
+    $("#año option[value='"+año+"']").attr("selected", "selected");
+    $("#tipo option[value='"+tipo+"']").attr("selected", "selected");
+    $("#formVehiculo").attr("action","{{path('_edit_vehiculo')}}");
+    activado();
+  }
+
+  function delete_vehiculo(id,name){
+    $('#nombre').html(name);
+    $('#id').val(id);
+  }
+
+  function reset(){
+    $("input[name='_id']").val(''); 
+    $("input[name='_valor']").val(''); ; 
+    $("#tipo option[value='']").attr("selected", "selected");
+    $("#año option[value='']").attr("selected", "selected");
+    $("#marca option[value='']").attr("selected", "selected");
+    $("#modelo option[value='']").attr("selected", "selected");
+    $("#formVehiculo").attr("action","{{path('_new_vehiculo')}}");
+    desactivado();
+  }
+
+  function activado(){
+    $('#año').removeAttr('disabled');
+    $('#marca').removeAttr('disabled');
+    $('#modelo').removeAttr('disabled');
+  }
+
+  function desactivado(){
+    $('#año').attr('disabled','disabled');
+    $('#marca').attr('disabled','disabled');
+    $('#modelo').attr('disabled','disabled');
+  }
+
+  function exist(){
+      if($('.alert') != null ){
+      setTimeout(function(){ $('.alert').hide(1000); }, 5000);
+      }
+  };
+</script>
+{% endblock %}
+
+
+
+{% block new_vehiculo %}
+<!-- Modal -->
+<div class="modal fade" id="new_vechiculo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Nuevo Vehículo</h4>
+            </div>
+            <div class="modal-body">
+             
+              <form id="formVehiculo" action="{{path('_new_vehiculo')}}" method="POST">
+                <input type="hidden" name="_id">
+                <div class="row">
+                    <div class="col-md-6">
+                         <div class="form-group">
+                            <label class="text-info">Tipo</label>
+                            <select class="form-control input-sm" id="tipo" name="_tipo" autofocus required>
+                                <option value=''>- Tipo -</option>
+                                <option value="tipo1">Tipo1</option>
+                                <option value="tipo2">Tipo2</option>
+                                <option value="tipo3">Tipo3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                         <div class="form-group">
+                            <label class="text-info">Año</label>
+                            <select class="form-control input-sm" id="año" name="_año" disabled autofocus required>
+                                <option value=''>- Año -</option>
+                                <option value="año1">Año1</option>
+                                <option value="año2">Año2</option>
+                                <option value="año3">Año3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                         <div class="form-group">
+                            <label class="text-info">Marca</label>
+                            <select class="form-control input-sm" id="marca" name="_marca" disabled autofocus required>
+                                <option value=''>- Marca -</option>
+                                <option value="marca1">Marca1</option>
+                                <option value="marca2">Marca2</option>
+                                <option value="marca3">Marca3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                         <div class="form-group">
+                            <label class="text-info">Modelo</label>
+                            <select class="form-control input-sm" id="modelo" name="_modelo" disabled autofocus required>
+                                <option value=''>- Modelo -</option>
+                                <option value="modelo1">Modelo1</option>
+                                <option value="modelo2">Modelo2</option>
+                                <option value="modelo3">Modelo3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="text-info">Tasación</label>
+                            <input type="text" class="form-control input-sm" id="valor" name="_valor" placeholder="Tasación" value="100000"  readonly autofocus required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+                </div>
+
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+  $('#tipo').change(function(){
+    tipo();
+  })
+  $('#año').change(function(){
+    año();
+  })
+
+  $('#marca').change(function(){
+    marca();
+  })
+  $('#modelo').change(function(){
+    modelo();
+  })
+
+  function tipo(){
+    $('#año').removeAttr('disabled');
+    $('#marca').attr('disabled','disabled');
+    $('#modelo').attr('disabled','disabled');
+  }
+  function año(){
+    $('#marca').removeAttr('disabled');
+    $('#modelo').attr('disabled','disabled');
+  }
+
+  function marca(){
+    $('#modelo').removeAttr('disabled');
+  }
+
+  function modelo(){
+    $('#valor').val("150000000");
+  }
+
+</script>
+{% endblock %}
+
+
+
+{% block delete_vehiculo %}
+<!-- Modal -->
+<div class="modal fade" id="delete_vehiculo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Eliminar Vehículo</h4>
+            </div>
+            <div class="modal-body">
+             
+              <form action="{{path('_delete_vehiculo')}}" method="POST">
+
+                <input type="hidden" id="id" name="_id">
+                <h5 class="text-muted text-center">¿Estás seguro que deseas eliminar el vehículo 
+                  <strong><span id="nombre"></span></strong>?
+                </h5>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-trash"></i>&nbsp;Eliminar</button>
+                </div>
+
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

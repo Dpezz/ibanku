@@ -1,0 +1,23 @@
+{% extends 'IBKDemoBundle:Layout:page_datos.html.twig' %}
+
+{% block title %}Datos Conyugue{% endblock %}
+
+{% block subtitle %}Datos Conyugue{% endblock %}
+
+{% block submenu_personales %}
+    <li role="presentation" class="active"><a href="#">Mis Datos</a></li>
+{% endblock %}
+
+{% block menubar %}
+    <li role="presentation"><a href="{{path('_personal_personal')}}">Personales</a></li>
+    <li role="presentation" class="active"><a href="{{path('_personal_conyugue')}}">Cónyugue</a></li>
+    <li role="presentation"><a href="{{path('_personal_academico')}}">Académicos</a></li>
+{% endblock %}
+
+
+{% block datos %}
+	{% include 'IBKDemoBundle:EditDatos:datosConyugue.html.twig' %}
+	{% block datos_conyugue %}
+		{{parent()}}
+	{% endblock %}
+{% endblock %}

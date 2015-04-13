@@ -1,0 +1,52 @@
+{% extends 'IBKDemoBundle:Layout:page.html.twig' %}
+
+{% block title %}Index{% endblock %}
+
+{% block stylesheets %}
+    {{parent()}}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{ asset('bundles/ibkdemo/jquery_rut/jquery.rut.min.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+  {% use 'IBKDemoBundle:Content:page_header.html.twig' %}
+  {% block header %}
+    {{parent()}}
+  {% endblock %}
+
+  <div class="container">
+
+    {% use 'IBKDemoBundle:Content:page_about.html.twig' %}
+    {% block about %}
+      {{parent()}}
+    {% endblock %}
+
+    {% block works %}
+      {{parent()}}
+    {% endblock %}
+  
+
+    {% use 'IBKDemoBundle:Content:page_features.html.twig' %}
+    {% block features %}
+      {{parent()}}
+    {% endblock %}
+  
+    {% use 'IBKDemoBundle:Content:page_testimony.html.twig' %}
+    {% block testimony %}
+      {{parent()}}
+    {% endblock %}
+
+
+  </div>
+
+{% use 'IBKDemoBundle:Content:page_footer.html.twig' %}
+{% block footer %}
+  {{parent()}}
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% block header %}
+<div class="jumbotron bg">
+    <div class="container">
+{#
+      <div class="row">
+        <div class="col-md-6">
+            <h1 style="color:#EDEDED">Hello, Ibanku!</h1>
+
+            <p style="color:#EDEDED">This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content.</p>
+
+            <br>
+
+            {% use 'IBKDemoBundle:Default:signin.html.twig' %}
+            {% block signin %}
+              {{parent()}}
+            {% endblock %}
+            
+        </div>
+      </div>
+#}
+	<br><br>
+  	<h1 class="text-center" style="color:#EDEDED">Hello, Ibanku!</h1>
+
+  	<div class="row">
+	    <div class="col-md-8 col-md-offset-2">
+	      	<p class="text-center" style="color:#EDEDED">This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content.</p>
+	    </div>
+  	</div>
+	  
+
+  	<br>
+
+	{% use 'IBKDemoBundle:Default:signin.html.twig' %}
+	{% block signin %}
+	{{parent()}}
+	{% endblock %}
+
+    </div>
+</div>
+
+{% endblock %}

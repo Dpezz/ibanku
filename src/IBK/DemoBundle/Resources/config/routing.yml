@@ -1,0 +1,30 @@
+_home:
+    resource: "@IBKDemoBundle/Controller/DefaultController.php"
+    type:     annotation
+
+_load:
+    resource: "@IBKDemoBundle/Controller/LoadController.php"
+    type:     annotation
+
+_profile:
+    resource: "@IBKDemoBundle/Controller/ProfileController.php"
+    type:     annotation
+
+_personal:
+    resource: "@IBKDemoBundle/Controller/PersonalController.php"
+    type:     annotation
+
+_Activos:
+    resource: "@IBKDemoBundle/Controller/ActivosController.php"
+    type:     annotation
+
+_edit:
+    resource: "@IBKDemoBundle/Controller/EditController.php"
+    type:     annotation
+
+_secured:
+    resource: "@IBKDemoBundle/Controller/SecuredController.php"
+    type:     annotation
+
+
+#las posiciones tienen importancia. OJO!!

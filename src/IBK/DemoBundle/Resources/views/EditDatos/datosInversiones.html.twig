@@ -1,0 +1,173 @@
+{% block datos_inversiones %}
+{# alerta resultado del formulario #}
+    {% if flag == 1 %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-check-circle"></i>&nbsp;<strong>Finalizado!</strong>&nbsp;cambios realizados con exito
+        </div>
+    {% elseif flag == 0 %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;ocurrio un error al guardar los cambios
+        </div>
+    {% endif %}
+
+<div class="table-responsive">
+  <table class="table table-hover">
+   	<thead>
+        <tr>
+            <th>#</th>
+            <th>Tipo</th>
+            <th>Monto</th>
+            <th>Descripción</th>
+          	<th>Editar/Eliminar</th>
+        </tr>
+  	</thead>
+  	<tbody>
+      {% for item in datosI %}
+          <tr>
+              <td><span class="badge ">{{loop.index}}</span></td>
+              <td>{{item.tipo}}</td>
+              <td>${{item.valor|number_format}}</td>
+              <td>{{item.descripcion}}</td>
+              <td>
+                <a href="#" data-toggle="modal" data-target="#new_inversiones" onclick="edit_inversion('{{item.id}}','{{item.descripcion}}','{{item.valor}}','{{item.tipo}}')"><i class="fa fa-edit text-primary"></i></a>
+                &emsp;-&emsp;
+                <a href="#" data-toggle="modal" data-target="#delete_inversion" onclick="delete_inversion('{{item.id}}','{{item.tipo}}')"><i class="fa fa-trash text-danger"></i></a>
+              </td>
+          </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<br>
+<br>
+<div class="modal-footer">
+	<button class="btn btn-primary pull-left" data-toggle="modal" data-target="#new_inversiones" onclick="reset()"><i class="fa fa-plus-circle"></i>&nbsp;Nueva</button>
+  <a class="btn btn-default" href="{{path('_activos_otros')}}"><i class="fa fa-arrow-right"></i>&nbsp;Siguiente</a>
+</div>
+
+
+<script type="text/javascript">
+  exist();
+  
+  function edit_inversion(id,descripcion,valor,tipo){
+    $("input[name='_id']").val(id); 
+    $("input[name='_valor']").val(valor); 
+    $("#descripcion").html(descripcion); 
+    $("#tipo option[value='"+tipo+"']").attr("selected", "selected");
+    $("#formInversion").attr("action","{{path('_edit_inversion')}}");
+  }
+
+  function delete_inversion(id,name){
+    $('#nombre').html(name);
+    $('#id').val(id);
+  }
+
+  function reset(){
+    $("input[name='_id']").val(''); 
+    $("input[name='_valor']").val(''); 
+    $("#descripcion").html(''); 
+    $("#tipo option[value='']").attr("selected", "selected");
+    $("#formInversion").attr("action","{{path('_new_inversion')}}");
+  }
+
+  function exist(){
+      if($('.alert') != null ){
+      setTimeout(function(){ $('.alert').hide(1000); }, 5000);
+      }
+  };
+</script>
+{% endblock %}
+
+
+
+
+{% block new_inversiones %}
+<!-- Modal -->
+<div class="modal fade" id="new_inversiones" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Nueva Inversión</h4>
+            </div>
+            <div class="modal-body">
+             
+              <form id="formInversion" action="{{path('_new_inversion')}}" method="POST">
+                <input type="hidden" name="_id">
+                  <div class="row">
+                      <div class="col-md-12">
+                           <div class="form-group">
+                              <label class="text-info">tipo</label>
+                              <select class="form-control input-sm" id="tipo" name="_tipo" autofocus required>
+                                  <option value=''>- tipo -</option>
+                                  {% set items = tipo|split(',') %}
+                                  {% for item in items %}
+                                    <option value="{{item}}">{{item}}</option>
+                                  {% endfor %}
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div class="form-group">
+                              <label class="text-info">monto</label>
+                              <input type="num" class="form-control input-sm" name="_valor" placeholder="$" autofocus required>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="text-info">Descripción</label>
+                    <textarea class="form-control" rows="2" id="descripcion" name="_descripcion" placeholder="Referencia, domicilio,etc" autofocus required></textarea>
+                  </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+                </div>
+
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block delete_inversion %}
+<!-- Modal -->
+<div class="modal fade" id="delete_inversion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Eliminar Inversión</h4>
+            </div>
+            <div class="modal-body">
+             
+              <form action="{{path('_delete_inversion')}}" method="POST">
+
+                <input type="hidden" id="id" name="_id">
+                <h5 class="text-muted text-center">¿Estás seguro que deseas eliminar la inversión 
+                  <strong><span id="nombre"></span></strong>?
+                </h5>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-trash"></i>&nbsp;Eliminar</button>
+                </div>
+
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

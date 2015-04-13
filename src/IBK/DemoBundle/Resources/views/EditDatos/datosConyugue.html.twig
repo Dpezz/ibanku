@@ -1,0 +1,200 @@
+{% block datos_personales %}
+{# alerta resultado del formulario #}
+    {% if flag == 1 %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-check-circle"></i>&nbsp;<strong>Finalizado!</strong>&nbsp;cambios realizados con exito
+        </div>
+    {% elseif flag == 0 %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;ocurrio un error al guardar los cambios
+        </div>
+    {% endif %}
+
+
+<div class="panel">
+  	<div class="panel-body">
+	<form action="{{path('_edit_conyugue')}}" method="POST">
+
+		<div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="text-info">Rut</label>
+                    <input type="text" class="form-control input-sm" id="rut" name="_rut" value="{% if dataC %}{{dataC.rut}}{% endif %}" placeholder="Ej: 11.111.111-1" autofocus required>
+                    <span id="icon_rut" class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                </div>
+            </div>
+        </div>
+
+        
+        <label class="text-info">Nombre</label>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" class="form-control input-sm" name="_nombre" value="{% if dataC %}{{dataC.nombre}}{% endif %}" placeholder="Nombre" autofocus required>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" class="form-control input-sm" name="_apellido_p" value="{% if dataC %}{{dataC.apellidop}}{% endif %}"  placeholder="Apellido Paterno" autofocus required>
+                </div>
+            </div>
+            <div class="col-md-4">   
+                <div class="form-group">
+                    <input type="text" class="form-control input-sm" name="_apellido_m" value="{% if dataC %}{{dataC.apellidom}}{% endif %}" placeholder="Apellido Materno" autofocus required>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+		<div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                <label class="text-info">Fecha Nacimiento</label>
+                {% if dataC %}
+                        {% set item = dataC.fechanacimiento|date('d') ~'/'~dataC.fechanacimiento|date('m') ~'/'~dataC.fechanacimiento|date('Y')%}
+                    {% endif %}
+                    <input type="text" class="form-control input-sm" id="birthday" name="_birthday" data-date-format="DD/MM/YYYY" value="{% if dataC %}{{item}}{% endif %}" placeholder="Fecha Nacimiento" autofocus required>
+                </div>
+            </div>
+            <div class="col-md-4">
+		        <div class="form-group">
+                    <label class="text-info">Nacionalidad</label>
+		            <input type="text" class="form-control input-sm" name="_nacionalidad" value="{% if dataC %}{{dataC.nacionalidad}}{% endif %}" placeholder="Nacionalidad" autofocus required>
+		        </div>
+            </div>
+            <div class="col-md-4">
+                 <div class="form-group">
+                    <label class="text-info">Sexo</label>
+                    <select class="form-control input-sm" name="_sexo" autofocus required>
+                        <option value=''>- Sexo -</option>
+                        {% set items = sexo|split(',') %}
+                        {% for item in items %}
+                            {% if dataC and item == dataC.sexo %}
+                                <option value="{{item}}" selected>{{item}}</option>
+                            {% else %}
+                                <option value="{{item}}">{{item}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+        	<div class="col-md-4">
+                <div class="form-group">
+                    <label class="text-info">Nivel Educación</label>
+                    <select class="form-control input-sm" name="_educacion" autofocus required>
+                        <option value=''>- Nivel Educación -</option>
+                        {% set items = educacion|split(',') %}
+                        {% for item in items %}
+                            {% if dataC and item == dataC.educacion %}
+                                <option value="{{item}}" selected>{{item}}</option>
+                            {% else %}
+                                <option value="{{item}}">{{item}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+        	</div>
+
+        	<div class="col-md-8">
+                <div class="form-group">
+                    <label class="text-info">Profesión u Oficio&nbsp;(Opcional)</label>
+                    <input type="text" class="form-control input-sm" name="_profesion" value="{% if dataC %}{{dataC.profesion}}{% endif %}" placeholder="Profesión u Oficio" autofocus>
+                </div>
+            </div>
+    	</div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="text-info">Actividad Económica</label>
+                     <select class="form-control input-sm" name="_economia" autofocus required>
+                        <option value=''>- Actividad Económica -</option>
+                        {% set items = economia|split(',') %}
+                        {% for item in items %}
+                            {% if dataC and item == dataC.economia %}
+                                <option value="{{item}}" selected>{{item}}</option>
+                            {% else %}
+                                <option value="{{item}}">{{item}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="text-info">Renta Liquida Mensual&nbsp;(Opcional)</label>
+                    <input type="number" class="form-control input-sm" name="_renta" value="{% if dataC %}{{dataC.renta}}{% endif %}"placeholder="Renta Liquida Mensual" autofocus>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-4">
+                 <div class="form-group">
+                    <label class="text-info">Celular&nbsp;(Opcional)</label>
+                    <input type="text" class="form-control input-sm" name="_celular" value="{% if dataC %}{{dataC.celular}}{% endif %}"placeholder="Celular" autofocus>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="text-info">Correo Electrónico&nbsp;(Opcional)</label>
+                    <input type="email" class="form-control input-sm" name="_email" value="{% if dataC %}{{dataC.email}}{% endif %}" placeholder="Correo Electrónico" autofocus>
+                </div>
+            </div>
+        </div>
+
+		<div class="modal-footer">
+            <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o"></i>&nbsp;Guardar</button>
+			<a class="btn btn-default" type="button" href="{{path('_personal_academico')}}"><i class="fa fa-arrow-right"></i>&nbsp;Siguiente</a>
+		</div>
+	</form>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        exist(); 
+
+        $('#birthday').datetimepicker({ pickTime: false });
+
+        //validar rut
+        $("#rut")
+        .rut({formatOn: 'keyup', validateOn: 'keyup'})
+        .on('rutInvalido', function(){ 
+            $(this).parents(".form-group").removeClass("has-success has-feedback");
+            $(this).parents(".form-group").addClass("has-error has-feedback");
+            $('#icon_rut').removeClass("glyphicon-ok");
+            $('#icon_rut').addClass("glyphicon-remove");
+        })
+        .on('rutValido', function(){ 
+            $(this).parents(".form-group").removeClass("has-error has-feedback");
+            $(this).parents(".form-group").addClass("has-success has-feedback");
+            $('#icon_rut').removeClass("glyphicon-remove");
+            $('#icon_rut').addClass("glyphicon-ok");
+        });
+
+
+        function exist(){
+            if($('.alert') != null ){
+                setTimeout(function(){ $('.alert').hide(1000); }, 5000);
+            }
+        }
+    })
+</script>
+{% endblock %}

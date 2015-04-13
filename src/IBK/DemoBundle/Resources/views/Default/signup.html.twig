@@ -1,0 +1,342 @@
+{% extends 'IBKDemoBundle:Layout:page.html.twig' %}
+
+
+{% block title %}Signup{% endblock %}
+
+
+{% block stylesheets %}
+    {{parent()}}
+    <link rel="stylesheet" href="{{ asset('bundles/ibkdemo/datetimepicker/css/bootstrap-datetimepicker.css') }}">
+{% endblock %}
+
+
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{ asset('bundles/ibkdemo/datetimepicker/js/moment.js') }}"></script>
+    <script src="{{ asset('bundles/ibkdemo/datetimepicker/js/bootstrap-datetimepicker.js') }}"></script>
+    <script src="{{ asset('bundles/ibkdemo/jquery_rut/jquery.rut.min.js') }}"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+
+    <div class="page-header">
+        <h1 class="text-center text-muted">Regístrate</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+
+            <form id="signupForm" action="{{ path("_demo_signup") }}" method="post" role="form">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="text-info">Rut</label>
+                        <input type="text" id="rut" name="_rut" class="form-control input-sm" placeholder="Ej: 15.115.654-5" required autofocus>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="text-info">N° Serie CNI&emsp;<a class="pull-right" href="">(?)</a></label>
+                        <input type="text" id="numero_serie" name="_numero_serie" class="form-control input-sm" required autofocus>
+                    </div>
+                </div>
+            </div>
+
+
+            <hr>
+
+            <label class="text-info">Nombre</label>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="text" id="nombre" name="_nombre" class="form-control input-sm" placeholder="Nombre" required autofocus >
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="text" id="apellido_p" name="_apellido_p" class="form-control input-sm" placeholder="Apellido Paterno"required autofocus>
+                    </div>
+                </div>
+                <div class="col-md-4">   
+                    <div class="form-group">
+                        <input type="text" id="apellido_m" name="_apellido_m" class="form-control input-sm" placeholder="Apellido Materno" required autofocus>
+                    </div>
+                </div>
+            </div>
+
+
+            <hr>
+
+
+            <div class="form-group">
+                <label class="text-info">Educación <strong>(opcional)</strong></label>
+                <select class="form-control input-sm" name="_educacion" novalidate="novalidate">
+                    <option value=''>- Seleccionar Educación -</option>
+                    {% set items = educacion|split(',') %}
+                    {% for item in items %}
+                        <option value="{{item}}">{{item}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="text-info">Región</label>
+                        <select class="form-control input-sm" id="region" name="_region" required autofocus>
+                            <option value=''>- Seleccionar Región -</option>
+                            {% set items = region|split(',') %}
+                            {% for item in items %}
+                                <option value="{{item}}">{{item}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="text-info">Comuna</label>
+                        <select class="form-control input-sm" id="comuna" name="_comuna" disabled required autofocus>
+                        <option>- Seleccionar comuna -</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <hr>
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="text-info">Nacionalidad</label>
+                        <input type="text" name="_nacionalidad" class="form-control input-sm" required autofocus>
+                    </div>
+                </div>
+                <div class="col-md-6 dateContainer">
+                    <label class="text-info">Fecha Nacimiento</label>
+                    <div class="form-group date" id="datetimePicker">
+                        <input type="text" class="form-control" name="_birthday" placeholder="DD/MM/YYYY" data-date-format="DD/MM/YYYY" required autofocus/>  
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+         
+            <div class="form-group">
+                <label class="text-info">Correo Electrónico</label>
+                <input type="email" name="_email" class="form-control input-sm" placeholder="Correo electrónico" required autofocus>
+            </div>
+            <div class="form-group">
+                <input type="email" name="_confirmEmail" class="form-control input-sm" placeholder="Confirmar Correo electrónico" required autofocus>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="text-info">Celular</label>
+                    <div class="form-group">
+                        <input type="text" name="_celular" class="form-control input-sm" required autofocus>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="text-info">Teléfono<strong>(opcional)</strong></label>
+                    <div class="form-group">
+                        <input type="text" name="_telefono" class="form-control input-sm" autofocus>
+                    </div>
+                </div>
+            </div>
+            
+            <hr>
+
+            <div class="form-group">
+                <label class="text-info">Contraseña</label>
+                <input type="password" name="_password" class="form-control input-sm" pattern=".{4,}" placeholder="Contraseña" required autofocus>
+            </div>    
+
+            <div class="form-group">
+                <input type="password" class="form-control input-sm" name="_confirmPassword" placeholder="Confirmar contraseña" required autofocus>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                    <label class="text-info">Facebook<strong>(opcional)</strong></label>
+                        <input type="text" class="form-control input-sm" name="_facebook" placeholder="/">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="text-info">Twitter<strong>(opcional)</strong></label>
+                        <input type="text" class="form-control input-sm" name="_twitter" placeholder="@">
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="acceptTerms">Acepto los <a href="">Términos y Condiciones</a>
+                    </label>
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <button class="btn btn-lg btn-info btn-block" id="btn-signup" type="submit"><i class="fa fa-sign-in"></i>&nbsp;Registrarse</button>
+            </div>
+            
+          </form>
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#datetimePicker').datetimepicker({ pickTime: false });
+      
+    
+    $('#signupForm').formValidation({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            _birthday: {
+                validators: {
+                    date: {
+                        format: 'DD/MM/YYYY',
+                        message: 'The value is not a valid date'
+                    }
+                }
+            },
+            _password: {
+                validators: {
+                    notEmpty: {
+                        message: 'The password is required and can\'t be empty'
+                    }
+                }
+            },
+            _confirmPassword: {
+                validators: {
+                    notEmpty: {
+                        message: 'The confirm password is required and can\'t be empty'
+                    },
+                    identical: {
+                        field: '_password',
+                        message: 'The password and its confirm are not the same'
+                    }
+                }
+            },
+            _email: {
+                validators: {
+                    notEmpty: {
+                        message: 'The email is required and can\'t be empty'
+                    }
+                }
+            },
+            _confirmEmail: {
+                validators: {
+                    notEmpty: {
+                        message: 'The confirm email is required and can\'t be empty'
+                    },
+                    identical: {
+                        field: '_email',
+                        message: 'The email and its confirm are not the same'
+                    }
+                }
+            },
+            _rut: {
+                validators: {
+                    id: {
+                        country: 'CL',
+                        message: 'The value is not valid %s ID'
+                    }
+                }
+            },
+            acceptTerms: {
+                validators: {
+                    notEmpty: {
+                        message: 'You have to accept the terms and policies'
+                    }
+                }
+            },
+        }
+    });
+    //validar rut
+    $("#rut").rut({formatOn: 'keyup'});
+    $("#rut").keyup(function(){
+        $('#signupForm').bootstrapValidator('revalidateField', '_rut');
+    })
+
+
+    //$('#signupForm').formValidation();
+    $('#datetimePicker').on('dp.change dp.show', function(e) {
+        $('#signupForm').bootstrapValidator('revalidateField', '_birthday');
+    });
+
+    //Cargar Comunas
+    $('#region').change(function(){
+        if($('#region').val() != ''){
+            $.ajax({
+            url: '{{path('_load_comuna')}}',
+            data: {'region': $('#region').val() },
+            method: "post",
+            success: function(item){
+                //activar CB comunas
+                $('#comuna').removeAttr('disabled');
+                var comunas = item.split(',');
+                $("#comuna").html('');
+
+                $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna");
+                for (var i = 0; i < comunas.length; i++) {
+                    $("<option value='"+comunas[i]+"'>"+comunas[i]+"</option>").appendTo("#comuna");
+                };
+            }
+            });
+        }else{
+            //desactivar CB comunas
+            $('#comuna').attr('disabled','disabled');
+            $("#comuna").html('');
+            $("<option value=''>- Seleccionar comuna -</option>").appendTo("#comuna");
+        }
+    })
+
+    
+ 
+  //  .on('dp.change dp.show', function(e) {
+  //      $('#signupForm').bootstrapValidator('revalidateField', '_rut');
+  //  })
+    
+  //  .on('rutInvalido', function(){ 
+  //      console.log("Hola")
+        /*$('#estado-rut').attr('class','form-group has-error has-feedback');
+        $('#estadoRut').attr('class','glyphicon glyphicon-remove form-control-feedback');
+        $('#btn-signup').removeAttr('disabled');*/
+   //     $('#signupForm').bootstrapValidator('revalidateField', '_rut');
+   //   })
+//.on('rutValido', function(){ 
+        /*$('#estado-rut').attr('class','form-group has-success has-feedback');
+        $('#estadoRut').attr('class','glyphicon glyphicon-ok form-control-feedback');
+        $('#btn-signup').attr('disabled','disabled');*/
+   //     $('#signupForm').bootstrapValidator('revalidateField', '_rut');
+    //});
+
+
+})
+</script>
+
+{% endblock %}
+

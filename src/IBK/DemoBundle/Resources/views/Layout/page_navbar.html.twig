@@ -1,0 +1,82 @@
+{% block navbar %}
+{% if not app.user %}
+<nav class="navbar navbar-default" role="navigation">
+  	<div class="container">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+	      	</button>
+	      	{#<a class="navbar-brand" href="#">Name Project</a>#}
+            <a class="navbar-brand" href="#">
+               <img  src="{{ asset('bundles/ibkdemo/img/logo.png') }}" style="margin-top:5px">
+            </a>
+	    </div>
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+	      	<ul class="nav navbar-nav">
+		        <li><a href="#">Inicio</a></li>
+		        <li><a href="#">Nosotros</a></li>
+		        <li><a href="#">Características</a></li>
+		        <li><a href="#">Contacto</a></li>
+	      	</ul>
+
+	      	<ul class="nav navbar-nav navbar-right">
+	        	<a  href="{{path('_demo_index')}}" class="btn btn-link navbar-btn" type="button">Iniciar Sesión</a>
+	          	<a href="{{path('_demo_signup')}}" class="btn btn-info navbar-btn" type="button">Regístrate</a>
+          	</ul>
+
+
+	    </div><!-- /.navbar-collapse -->
+  	</div><!-- /.container -->
+</nav>
+
+{% else %}
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  	<div class="container-fluid">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+	      	</button>
+            <a class="navbar-brand" href="">
+               <img  src="{{ asset('bundles/ibkdemo/img/logo.png') }}" style="margin-top:5px;margin-left:50px;margin-right:30px">
+            </a>
+	    </div>
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+
+	      	<ul class="nav navbar-nav navbar-right" style="margin-right:15px">
+	      		
+	      		<li><a href="#"><i class="fa fa-bell fa-lg"></i></a></li>
+	      		<li><a href="#"><span class="badge">42%</span></a></li>
+	      		<li><span>&emsp;</span></li>
+	        	<li class="active">
+	        		{% if app.user.url is not empty %}
+	        		<a>
+                    	<span class="text-muted"> 	{{ app.user.username|lower|trim }} </span>&nbsp;
+                    	<img src="{{asset('img/'~ app.user.url )}}" class="img-circle" width="25px">
+                    </a>
+                    {% else %}
+                    <a>
+                    	<span class="text-muted"> 	{{ app.user.username|lower|trim }} </span>&nbsp;
+                    	<img src="{{asset('bundles/pcvdemo/image/imagen.png')}}" class="img-circle" width="25px">
+                    </a>
+                    {% endif %}
+		        </li>
+          	</ul>
+
+	    </div><!-- /.navbar-collapse -->
+  	</div><!-- /.container -->
+</nav>
+{% endif %}
+
+{% endblock %}

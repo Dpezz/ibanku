@@ -1,0 +1,189 @@
+{% block datos_cuentas %}
+{# alerta resultado del formulario #}
+  {% if flag == 1 %}
+      <div class="alert alert-success alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert">
+              <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+          </button>
+          <i class="fa fa-check-circle"></i>&nbsp;<strong>Finalizado!</strong>&nbsp;cambios realizados con exito
+      </div>
+  {% elseif flag == 0 %}
+      <div class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert">
+              <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+          </button>
+          <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;ocurrio un error al guardar los cambios
+      </div>
+  {% endif %}
+
+<div class="table-responsive">
+  <table class="table table-hover">
+   	<thead>
+        <tr>
+      		<th>#</th>
+          	<th>Banco</th>
+          	<th>Sucursal</th>
+          	<th>Cuenta</th>
+          	<th>Ejecutivo</th>
+          	<th>Editar/Eliminar</th>
+        </tr>
+  	</thead>
+  	<tbody>
+      {% for item in datosC %}
+        <tr>
+          	<td><span class="badge ">{{loop.index}}</span></td>
+          	<td>{{item.banco}}</td>
+          	<td>{{item.sucursal}}</td>
+          	<td>{{item.cuenta}}</td>
+          	<td>{{item.ejecutivo}}</td>
+          	<td>
+            <a href="#" data-toggle="modal" data-target="#new_cuenta" onclick="edit_cuenta('{{item.id}}','{{item.banco}}','{{item.sucursal}}','{{item.cuenta}}','{{item.ejecutivo}}')"><i class="fa fa-edit text-primary"></i></a>
+                &emsp;-&emsp;
+            <a href="#" data-toggle="modal" data-target="#delete_cuenta" onclick="delete_cuenta('{{item.id}}','{{item.banco}}')"><i class="fa fa-trash text-danger"></i></a>
+            </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+  </table>
+</div>
+
+<br>
+<br>
+<div class="modal-footer">
+	<button class="btn btn-primary pull-left" data-toggle="modal" data-target="#new_cuenta" onclick="reset()"><i class="fa fa-plus-circle"></i>&nbsp;Nueva</button>
+  <a class="btn btn-default" href="{{path('_activos_vehiculos')}}"><i class="fa fa-arrow-right"></i>&nbsp;Siguiente</a>
+</div>
+
+<script type="text/javascript">
+  exist();
+  
+  function edit_cuenta(id,banco,sucursal,cuenta,ejecutivo){
+    $("input[name='_id']").val(id); 
+    $("input[name='_sucursal']").val(sucursal); 
+    $("input[name='_cuenta']").val(cuenta); 
+    $("input[name='_ejecutivo']").val(ejecutivo); 
+    $("#banco option[value='"+banco+"']").attr("selected", "selected");
+    $("#formCuenta").attr("action","{{path('_edit_cuenta')}}");
+  }
+
+  function delete_cuenta(id,name){
+    $('#nombre').html(name);
+    $('#id').val(id);
+  }
+
+  function reset(){
+    $("input[name='_id']").val(''); 
+    $("input[name='_sucursal']").val(''); 
+    $("input[name='_cuenta']").val(''); 
+    $("input[name='_ejecutivo']").val(''); 
+    $("#banco option[value='']").attr("selected", "selected");
+    $("#formCuenta").attr("action","{{path('_new_cuenta')}}");
+  }
+
+  function exist(){
+      if($('.alert') != null ){
+        setTimeout(function(){ $('.alert').hide(1000); }, 5000);
+      }
+  };
+</script>
+{% endblock %}
+
+
+
+
+{% block new_cuenta %}
+<!-- Modal -->
+<div class="modal fade" id="new_cuenta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Nueva Cuenta</h4>
+            </div>
+            <div class="modal-body">
+             
+              <form id="formCuenta" action="{{path('_new_cuenta')}}" method="POST">
+                  <input type="hidden" name="_id">
+                  <div class="row">
+                      <div class="col-md-12">
+                           <div class="form-group">
+                              <label class="text-info">Banco</label>
+                              <select class="form-control input-sm" id="banco" name="_banco" autofocus required>
+                                  <option value=''>- Banco -</option>
+                                  <option value="banco1">banco1</option>
+                                  <option value="banco2">banco1</option>
+                                  <option value="banco3">banco1</option>
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="form-group">
+                              <label class="text-info">Sucursal</label>
+                              <input type="text" class="form-control input-sm" name="_sucursal" placeholder="Sucursal" autofocus required>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-group">
+                              <label class="text-info">Cuenta</label>
+                              <input type="text" class="form-control input-sm" name="_cuenta" placeholder="Cuenta" autofocus required>
+                          </div>
+                      </div>
+                  </div>
+
+
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div class="form-group">
+                              <label class="text-info">Ejecutivo</label>
+                              <input type="text" class="form-control input-sm" name="_ejecutivo" placeholder="Ejecutivo" autofocus required>
+                          </div>
+                      </div>
+                  </div>
+
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+                </div>
+
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block delete_cuenta %}
+<!-- Modal -->
+<div class="modal fade" id="delete_cuenta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Eliminar Cuenta</h4>
+            </div>
+            <div class="modal-body">
+             
+              <form action="{{path('_delete_cuenta')}}" method="POST">
+
+                <input type="hidden" id="id" name="_id">
+                <h5 class="text-muted text-center">¿Estás seguro que deseas eliminar la cuenta 
+                  <strong><span id="nombre"></span></strong>?
+                  
+                </h5>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-trash"></i>&nbsp;Eliminar</button>
+                </div>
+
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'IBKDemoBundle:Layout:page_datos.html.twig' %}
+
+{% block title %}Permisos{% endblock %}
+
+{% block subtitle %}Permisos{% endblock %}
+
+
+{% block datos %}
+	{% include 'IBKDemoBundle:EditDatos:datosPermisos.html.twig' %}
+	{% block datos_permisos %}
+		{{parent()}}
+	{% endblock %}
+{% endblock %}
